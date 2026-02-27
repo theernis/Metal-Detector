@@ -1,0 +1,10 @@
+D:\Electrical engineering\MO2\Project\Metal Detector WinForms\Metal Detector WinForms\bin\Debug\Metal Detector WinForms.exe.config
+D:\Electrical engineering\MO2\Project\Metal Detector WinForms\Metal Detector WinForms\bin\Debug\Metal Detector WinForms.exe
+D:\Electrical engineering\MO2\Project\Metal Detector WinForms\Metal Detector WinForms\bin\Debug\Metal Detector WinForms.pdb
+D:\Electrical engineering\MO2\Project\Metal Detector WinForms\Metal Detector WinForms\obj\Debug\Metal Detector WinForms.csproj.AssemblyReference.cache
+D:\Electrical engineering\MO2\Project\Metal Detector WinForms\Metal Detector WinForms\obj\Debug\Metal_Detector_WinForms.Form1.resources
+D:\Electrical engineering\MO2\Project\Metal Detector WinForms\Metal Detector WinForms\obj\Debug\Metal_Detector_WinForms.Properties.Resources.resources
+D:\Electrical engineering\MO2\Project\Metal Detector WinForms\Metal Detector WinForms\obj\Debug\Metal Detector WinForms.csproj.GenerateResource.cache
+D:\Electrical engineering\MO2\Project\Metal Detector WinForms\Metal Detector WinForms\obj\Debug\Metal Detector WinForms.csproj.CoreCompileInputs.cache
+D:\Electrical engineering\MO2\Project\Metal Detector WinForms\Metal Detector WinForms\obj\Debug\Metal Detector WinForms.exe
+D:\Electrical engineering\MO2\Project\Metal Detector WinForms\Metal Detector WinForms\obj\Debug\Metal Detector WinForms.pdb
