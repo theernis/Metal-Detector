@@ -4,14 +4,16 @@
 #include <cmath>
 #include "FastNAN.h"
 
-struct SensorData {
+struct SensorData
+{
   float enterTime_s = NAN;
   float exitTime_s = NAN;
   bool hasEntered = false;
   bool hasExited = false;
 };
 
-struct MeasureData {
+struct MeasureData
+{
   int count;
   SensorData* sensorData = nullptr;
 };

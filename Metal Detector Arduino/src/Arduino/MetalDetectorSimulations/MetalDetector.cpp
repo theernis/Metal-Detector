@@ -43,7 +43,8 @@ bool triggered(Position sensorPosition, Piece piece, float verticalPoz)
 {
     // fix rotations
     piece.angle.angle_deg = fmod(piece.angle.angle_deg, 180.00f);
-    if (piece.angle.angle_deg > 90.00f) {
+    if (piece.angle.angle_deg > 90.00f)
+    {
         piece.angle.angle_deg -= 90.00f;
         float temp = piece.length_m;
         piece.length_m = piece.width_m;
@@ -62,27 +63,33 @@ bool triggered(Position sensorPosition, Piece piece, float verticalPoz)
 int MetalDetectorArray::readSensor(int index)
 {
     // validate index
-    if (index < 0 || index > _count) {
+    if (index < 0 || index > _count)
+    {
         return -1;
     }
     
     // check if disabled or if there are no simulated pieces
-    if (!_enabled[index] || pieceCount <= 0) {
+    if (!_enabled[index] || pieceCount <= 0)
+    {
         return 0;
     }
 
     // calculate simulated piece position
     float verticalPoz = verticalPieceStart_m - pieces[pieceIndex].speed_m_per_s * (millis() - timeOffset_ms) / 1000;
     // simulate next piece if last one passed
-    if (verticalPoz < verticalPieceEnd_m || pieces[pieceIndex].speed_m_per_s <= 0) {
+    if (verticalPoz < verticalPieceEnd_m || pieces[pieceIndex].speed_m_per_s <= 0)
+    {
         pieceIndex = (pieceIndex+1)%pieceCount;
         timeOffset_ms = millis();
     }
 
     //check if triggered
-    if (triggered(sensorPositions[index], pieces[pieceIndex], verticalPoz)) {
+    if (triggered(sensorPositions[index], pieces[pieceIndex], verticalPoz))
+    {
         return 1023;
-    } else {
+    }
+    else
+    {
         return 0;
     }
 }
@@ -96,7 +103,8 @@ void MetalDetectorArray::setThreshold(int index, int threshold)
 // here for compatibility
 int MetalDetectorArray::getThreshold(int index)
 {
-    if (index >= 0 && index < _count) {
+    if (index >= 0 && index < _count)
+    {
         return 511;
     }
     return -1;
@@ -105,7 +113,8 @@ int MetalDetectorArray::getThreshold(int index)
 // enable/disable a sensor
 void MetalDetectorArray::setEnabled(int index, bool enabled)
 {
-    if (index >= 0 && index < _count) {
+    if (index >= 0 && index < _count)
+    {
         _enabled[index] = enabled;
     }
 }

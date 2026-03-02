@@ -5,7 +5,8 @@
 #include "MeasureData.h"
 #include "FastTrigonometry.h"
 
-struct Measurement {
+struct Measurement
+{
   float speed_m_per_s = NAN; // m/s
   float length_m = NAN; // m
   float width_m = NAN; // m

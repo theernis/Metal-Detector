@@ -2,11 +2,13 @@
 
 
 // reset measured data
-void resetMeasurements(MeasureData* data, int sensorCount) {
+void resetMeasurements(MeasureData* data, int sensorCount)
+{
     // set count
     (*data).count = sensorCount;
     // unallocate list
-    if ((*data).sensorData != nullptr) {
+    if ((*data).sensorData != nullptr)
+    {
         delete[] (*data).sensorData;
         (*data).sensorData = nullptr;
     }
@@ -15,7 +17,8 @@ void resetMeasurements(MeasureData* data, int sensorCount) {
 }
 
 // check if sufficient data is collected
-bool validateMeasurements(MeasureData* data) {
+bool validateMeasurements(MeasureData* data)
+{
     bool allExited = true;
     for (int i = 0; i < (*data).count; i++)
     {

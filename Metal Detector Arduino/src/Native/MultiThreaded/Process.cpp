@@ -1,15 +1,19 @@
 #include "Process.h"
 
-struct ThreadData {
+struct ThreadData
+{
     std::thread* thread;
     SimulationData* data;
 };
 
 std::queue<ThreadData*> threadQueue;
 
-void outputThread(bool* working, void (*processOutput)(OUTPUT_FUNCTION_ARGS)) {
-    while (*working || !threadQueue.empty()) {
-        if (!threadQueue.empty()) {
+void outputThread(bool* working, void (*processOutput)(OUTPUT_FUNCTION_ARGS))
+{
+    while (*working || !threadQueue.empty())
+    {
+        if (!threadQueue.empty())
+        {
             ThreadData* threadData = threadQueue.front();
             threadQueue.pop();
             (*threadData).thread->join();
@@ -21,11 +25,13 @@ void outputThread(bool* working, void (*processOutput)(OUTPUT_FUNCTION_ARGS)) {
     }
 }
 
-void workerThread(Piece piece, bool* enabled, SimulationData* data) {
+void workerThread(Piece piece, bool* enabled, SimulationData* data)
+{
     *data = processPiece(piece, enabled);
 }
 
-void processPieceRanges(PieceRange pieceRange, bool* enabled, void (*processOutput)(OUTPUT_FUNCTION_ARGS)) {
+void processPieceRanges(PieceRange pieceRange, bool* enabled, void (*processOutput)(OUTPUT_FUNCTION_ARGS))
+{
     float* speedValues = new float[pieceRange.speed.stepCount + 1];
     float* lengthValues = new float[pieceRange.length.stepCount + 1];
     float* widthValues = new float[pieceRange.width.stepCount + 1];

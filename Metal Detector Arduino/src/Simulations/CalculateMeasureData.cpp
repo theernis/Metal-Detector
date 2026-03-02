@@ -1,7 +1,8 @@
 #include "CalculateMeasureData.h"
 
 // calculate sensor data for a sensor
-void calculateSensorData(SensorData* sensorData, int sensorIndex, Piece* piece) {
+void calculateSensorData(SensorData* sensorData, int sensorIndex, Piece* piece)
+{
     Piece _piece = *piece;
     // calculate the position of the sensor relative to the piece
     Position relativePoint = T(sensorPositions[sensorIndex], {_piece.horizontalOffset_m, 0}, -_piece.angle.sinVal, _piece.angle.cosVal);
@@ -18,7 +19,8 @@ void calculateSensorData(SensorData* sensorData, int sensorIndex, Piece* piece) 
     // determine entry and exit points
     float entryPoint = NAN;
     float exitPoint = NAN;
-    for (int i = 0, j = 0; i < 4 && j < 2; i++) {
+    for (int i = 0, j = 0; i < 4 && j < 2; i++)
+    {
         if (!(fastIsNAN(collisionPoints[i].x) || fastIsNAN(collisionPoints[i].y)))
         {
             float edgeDistance = treshold(collisionPoints[i], *piece) - 1;
@@ -49,7 +51,8 @@ void calculateSensorData(SensorData* sensorData, int sensorIndex, Piece* piece) 
         }
     }
 
-    if (!(fastIsNAN(entryPoint) && fastIsNAN(exitPoint))) {
+    if (!(fastIsNAN(entryPoint) && fastIsNAN(exitPoint)))
+    {
         float entryTime = entryPoint / _piece.speed_m_per_s;
         float exitTime = exitPoint / _piece.speed_m_per_s;
 
@@ -61,8 +64,10 @@ void calculateSensorData(SensorData* sensorData, int sensorIndex, Piece* piece) 
 }
 
 // calculate measurement data
-void calculateMeasurementData(MeasureData* data, bool* enabled, Piece piece) {
-    for (int i = 0; i < (*data).count; i++) {
+void calculateMeasurementData(MeasureData* data, bool* enabled, Piece piece)
+{
+    for (int i = 0; i < (*data).count; i++)
+    {
         if (enabled[i] == true)
         {
             calculateSensorData(&(*data).sensorData[i], i, &piece);

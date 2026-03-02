@@ -8,11 +8,13 @@ using namespace std;
 
 ofstream outputFile;
 
-void ignoreOutput(SimulationData* data) {
+void ignoreOutput(SimulationData* data)
+{
     return;
 }
 
-void printPiece(Piece piece) {
+void printPiece(Piece piece)
+{
     cout << "speed: " << piece.speed_m_per_s << endl;
     cout << "length: " << piece.length_m << endl;
     cout << "width: " << piece.width_m << endl;
@@ -20,7 +22,8 @@ void printPiece(Piece piece) {
     cout << "horizontal offset: " << piece.horizontalOffset_m << endl;
 }
 
-void printMeasureData(MeasureData data) {
+void printMeasureData(MeasureData data)
+{
     for (int i = 0; i < 6; i++)
     {
         cout << "sensor i: " << i << endl;
@@ -31,14 +34,16 @@ void printMeasureData(MeasureData data) {
     }
 }
 
-void printMeasurement(Measurement measurement) {
-        cout << "speed: " << measurement.speed_m_per_s << endl;
-        cout << "length: " << measurement.length_m << endl;
-        cout << "width: " << measurement.width_m << endl;
-        cout << "angle: " << measurement.angle_deg << endl;
+void printMeasurement(Measurement measurement)
+{
+    cout << "speed: " << measurement.speed_m_per_s << endl;
+    cout << "length: " << measurement.length_m << endl;
+    cout << "width: " << measurement.width_m << endl;
+    cout << "angle: " << measurement.angle_deg << endl;
 }
 
-void printOutput(SimulationData* data) {
+void printOutput(SimulationData* data)
+{
     #ifdef OUTPUT_PIECE
     printPiece((*data).piece);
     #endif
@@ -58,11 +63,13 @@ void printOutput(SimulationData* data) {
     cout << endl;
 }
 
-void createParserFile(const std::filesystem::path &filepath) {
+void createParserFile(const std::filesystem::path &filepath)
+{
     std::filesystem::path parserPath = filepath;
     parserPath += ".parser";
     ofstream parserFile(parserPath.string());
-    if (!parserFile) {
+    if (!parserFile)
+    {
         std::cerr << "Failed to open parser file '" << parserPath << "'\n";
         return;
     }
@@ -91,18 +98,23 @@ void createParserFile(const std::filesystem::path &filepath) {
     parserFile.close();
 }
 
-static std::string sanitizeString(const std::string &input) {
+static std::string sanitizeString(const std::string &input)
+{
     std::string result = input;
-    for (char &c : result) {
-        if (c == ':' || c == ' ') {
+    for (char &c : result)
+    {
+        if (c == ':' || c == ' ')
+        {
             c = '_';
         }
     }
     return result;
 }
 
-void openOutputFile(const std::filesystem::path &filepath) {
-    if (outputFile.is_open()) {
+void openOutputFile(const std::filesystem::path &filepath)
+{
+    if (outputFile.is_open())
+    {
         return;
     }
 
@@ -117,7 +129,8 @@ void openOutputFile(const std::filesystem::path &filepath) {
     dataPath += ".data";
     // open in binary mode so we can write raw floats/booleans
     outputFile.open(dataPath.string(), std::ios::binary);
-    if (!outputFile) {
+    if (!outputFile)
+    {
         std::cerr << "Failed to open output file '" << dataPath << "'\n";
         // give up early, don't try to write parser file either
         return;
@@ -126,12 +139,15 @@ void openOutputFile(const std::filesystem::path &filepath) {
     createParserFile(sanitized);
 }
 
-void closeOutputFile() {
+void closeOutputFile()
+{
     outputFile.close();
 }
 
-void writePieceToFile(Piece piece) {
-    if (!outputFile.is_open()) {
+void writePieceToFile(Piece piece)
+{
+    if (!outputFile.is_open())
+    {
         return;
     }
     outputFile.write(reinterpret_cast<const char*>(&piece.speed_m_per_s), sizeof(piece.speed_m_per_s));
@@ -141,8 +157,10 @@ void writePieceToFile(Piece piece) {
     outputFile.write(reinterpret_cast<const char*>(&piece.horizontalOffset_m), sizeof(piece.horizontalOffset_m));
 }
 
-void writeMeasureDataToFile(MeasureData data) {
-    for (int i = 0; i < 6; ++i) {
+void writeMeasureDataToFile(MeasureData data)
+{
+    for (int i = 0; i < 6; ++i)
+    {
         outputFile.write(reinterpret_cast<const char*>(&data.sensorData[i].enterTime_s), sizeof(data.sensorData[i].enterTime_s));
         outputFile.write(reinterpret_cast<const char*>(&data.sensorData[i].exitTime_s), sizeof(data.sensorData[i].exitTime_s));
         outputFile.write(reinterpret_cast<const char*>(&data.sensorData[i].hasEntered), sizeof(data.sensorData[i].hasEntered));
@@ -150,7 +168,8 @@ void writeMeasureDataToFile(MeasureData data) {
     }
 }
 
-void writeMeasurementToFile(Measurement measurement) {
+void writeMeasurementToFile(Measurement measurement)
+{
     outputFile.write(reinterpret_cast<const char*>(&measurement.speed_m_per_s), sizeof(measurement.speed_m_per_s));
     outputFile.write(reinterpret_cast<const char*>(&measurement.length_m), sizeof(measurement.length_m));
     outputFile.write(reinterpret_cast<const char*>(&measurement.width_m), sizeof(measurement.width_m));
@@ -158,7 +177,8 @@ void writeMeasurementToFile(Measurement measurement) {
 }
 
 
-void writeOutputToFile(SimulationData* data) {
+void writeOutputToFile(SimulationData* data)
+{
     #ifdef OUTPUT_PIECE
     writePieceToFile((*data).piece);
     #endif

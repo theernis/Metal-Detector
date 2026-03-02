@@ -1,6 +1,7 @@
 #include "ProcessPiece.h"
 
-SimulationData processPiece(Piece piece, bool* enabled) {
+SimulationData processPiece(Piece piece, bool* enabled)
+{
     static MeasureData data;
     int sensor_count = 6;
     resetMeasurements(&data, sensor_count);

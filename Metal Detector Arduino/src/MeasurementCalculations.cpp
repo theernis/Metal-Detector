@@ -5,12 +5,14 @@ float distanceBetweenSensorInLine_m = 0.08; // m
 float distanceToFirstSensor_m = 0.4; // m
 
 // calculate speed
-float calculateSpeed_m_per_s(MeasureData data) {
+float calculateSpeed_m_per_s(MeasureData data)
+{
     return distanceToFirstSensor_m / (data.sensorData[3].exitTime_s - data.sensorData[0].exitTime_s);
 }
 
 // calculate length
-float calculateLength_m(MeasureData data, float speed_m_per_s) {
+float calculateLength_m(MeasureData data, float speed_m_per_s)
+{
     float time_s = 0;
     float newTime_s = 0;
     // find longest time between enter and exit of sensors in line
@@ -23,9 +25,11 @@ float calculateLength_m(MeasureData data, float speed_m_per_s) {
 }
 
 // calculate width
-float calculateWidth_m(MeasureData data) {
+float calculateWidth_m(MeasureData data)
+{
     int countwidth = 0;
-    for (int i = 1; i < data.count; i++) {
+    for (int i = 1; i < data.count; i++)
+    {
         countwidth += (int)(bool)(data.sensorData[i].hasEntered && data.sensorData[i].hasExited);
     }
     return countwidth * distanceBetweenSensorInLine_m;
@@ -33,12 +37,14 @@ float calculateWidth_m(MeasureData data) {
 
 
 // calculate angle 
-struct Angles {
+struct Angles
+{
     float left_deg; // range -90.00:00.00
     float middle_deg; // range -45.00:45.00
     float right_deg; // range 00.00:90.00
 };
-float calculateAngle_deg(MeasureData data, float speed_m_per_s) {
+float calculateAngle_deg(MeasureData data, float speed_m_per_s)
+{
     int angleCount = 0;
 
     float* angles = new float[data.count-2];
@@ -129,7 +135,8 @@ float calculateAngle_deg(MeasureData data, float speed_m_per_s) {
         for (int i = 0; i < angleCount; i++)
         {
             float tempDiff = (angleRanges[i].left_deg - average.left_deg);
-            if (((tempDiff < 0) ? -tempDiff : tempDiff) <= diff) {
+            if (((tempDiff < 0) ? -tempDiff : tempDiff) <= diff)
+            {
                 angleSum += angleRanges[i].left_deg;
                 newAngleCount++;
             }
@@ -140,7 +147,8 @@ float calculateAngle_deg(MeasureData data, float speed_m_per_s) {
         for (int i = 0; i < angleCount; i++)
         {
             float tempDiff = (angleRanges[i].middle_deg - average.middle_deg);
-            if (((tempDiff < 0) ? -tempDiff : tempDiff) <= diff) {
+            if (((tempDiff < 0) ? -tempDiff : tempDiff) <= diff)
+            {
                 angleSum += angleRanges[i].middle_deg;
                 newAngleCount++;
             }
@@ -151,7 +159,8 @@ float calculateAngle_deg(MeasureData data, float speed_m_per_s) {
         for (int i = 0; i < angleCount; i++)
         {
             float tempDiff = (angleRanges[i].right_deg - average.right_deg);
-            if (((tempDiff < 0) ? -tempDiff : tempDiff) <= diff) {
+            if (((tempDiff < 0) ? -tempDiff : tempDiff) <= diff)
+            {
                 angleSum += angleRanges[i].right_deg;
                 newAngleCount++;
             }
@@ -189,8 +198,10 @@ float calculateAngle_deg(MeasureData data, float speed_m_per_s) {
     // I give up for real this time, I don't think I can improve it any more
 }
 
-void adjustOnAngle(Measurement* result, MeasureData data) {
-    if ((*result).angle_deg == 0.00f) {
+void adjustOnAngle(Measurement* result, MeasureData data)
+{
+    if ((*result).angle_deg == 0.00f)
+    {
         return;
     }
     float angle = (*result).angle_deg; // rad
@@ -205,8 +216,10 @@ void adjustOnAngle(Measurement* result, MeasureData data) {
     int mostRightIndex = -1;
     for (int i = 1; i < data.count; i++)
     {
-        if (data.sensorData[i].hasEntered) {
-            if (mostLeftIndex == -1) {
+        if (data.sensorData[i].hasEntered)
+        {
+            if (mostLeftIndex == -1)
+            {
                 mostLeftIndex = i;
             }
             mostRightIndex = i;
@@ -222,7 +235,8 @@ void adjustOnAngle(Measurement* result, MeasureData data) {
     (*result).width_m = newWidth;
 }
 
-Measurement processMeasuredData(MeasureData data) {
+Measurement processMeasuredData(MeasureData data)
+{
     Measurement result;
 
     result.speed_m_per_s = calculateSpeed_m_per_s(data);

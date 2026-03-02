@@ -10,14 +10,16 @@ using namespace std;
 
 //#define TEST
 
-enum OutputMode {
+enum OutputMode
+{
     IGNORE,
     PRINT,
     WRITE
 };
 
 // helper to ensure Desktop/Simulations exists and return its path
-static std::filesystem::path getFilename() {
+static std::filesystem::path getFilename()
+{
     namespace fs = std::filesystem;
     const char *userProfile = std::getenv("USERPROFILE");
     fs::path base = userProfile ? fs::path(userProfile) : fs::current_path();
@@ -34,7 +36,8 @@ static std::filesystem::path getFilename() {
     return fullPath;
 }
 
-int main() {
+int main()
+{
     void (*outputFunction)(OUTPUT_FUNCTION_ARGS);
     OutputMode outputMode = WRITE;
     switch (outputMode)
@@ -66,7 +69,8 @@ int main() {
     test(outputFunction);
     #endif
     
-    if (outputMode == WRITE) {
+    if (outputMode == WRITE)
+    {
         closeOutputFile();
     }
 

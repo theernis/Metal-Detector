@@ -22,10 +22,12 @@ Piece pieces[] = {
     {0.50f, 0.20f, 0.20f, angleDeg(85.00f), 0.00f},
 };
 
-Angle angleDeg(float angle_deg) {
+Angle angleDeg(float angle_deg)
+{
     return (Angle){angle_deg, (float)RAD(angle_deg), fastSinDeg(angle_deg), fastCosDeg(angle_deg), fastTanDeg(angle_deg)};
 }
 
-Angle angleRad(float angle_rad) {
+Angle angleRad(float angle_rad)
+{
     return (Angle){(float)DEG(angle_rad), angle_rad, fastSinDeg(DEG(angle_rad)), fastCosDeg(DEG(angle_rad)), fastTanDeg(DEG(angle_rad))};
 }

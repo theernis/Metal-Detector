@@ -36,7 +36,8 @@ void MetalDetectorArray::setSensor(int index, int pin)
 int MetalDetectorArray::readSensor(int index)
 {
     // validate index
-    if (index < 0 || index > _count) {
+    if (index < 0 || index > _count)
+    {
         return -1;
     }
     
@@ -53,7 +54,8 @@ void MetalDetectorArray::setThreshold(int index, int threshold)
 // here for compatibility
 int MetalDetectorArray::getThreshold(int index)
 {
-    if (index >= 0 && index < _count) {
+    if (index >= 0 && index < _count)
+    {
         return 511;
     }
     return -1;
@@ -62,7 +64,8 @@ int MetalDetectorArray::getThreshold(int index)
 // enable/disable a sensor
 void MetalDetectorArray::setEnabled(int index, bool enabled)
 {
-    if (index >= 0 && index < _count) {
+    if (index >= 0 && index < _count)
+    {
         _enabled[index] = enabled;
     }
 }

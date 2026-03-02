@@ -1,6 +1,7 @@
 #include "Process.h"
 
-void processPieceRanges(PieceRange pieceRange, bool* enabled, void (*processOutput)(OUTPUT_FUNCTION_ARGS)) {
+void processPieceRanges(PieceRange pieceRange, bool* enabled, void (*processOutput)(OUTPUT_FUNCTION_ARGS))
+{
     float* speedValues = new float[pieceRange.speed.stepCount + 1];
     float* lengthValues = new float[pieceRange.length.stepCount + 1];
     float* widthValues = new float[pieceRange.width.stepCount + 1];
