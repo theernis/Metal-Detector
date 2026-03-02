@@ -7,7 +7,7 @@
 #include "Range.h"
 #include "Output.h"
 
-SimulationData processPiece(Piece piece, bool* enabled);
+void processPiece(Piece piece, bool* enabled, SimulationData* data);
 void test(void (*processOutput)(SimulationData*));
 
 #endif

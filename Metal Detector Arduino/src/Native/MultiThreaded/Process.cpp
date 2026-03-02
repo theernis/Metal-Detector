@@ -4,7 +4,9 @@
 #define PRINT_THREAD_NUMBER
 
 #ifdef PRINT_THREAD_NUMBER
-int threadCounter = 0;
+int mainThreadCounter = 0;
+int outputThreadCounter = 0;
+int workerThreadCounter = 0;
 #endif
 
 struct ThreadData
@@ -21,7 +23,7 @@ void outputThread(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
     std::cout << "Output thread ID: " << std::this_thread::get_id() << std::endl;
     #endif
     #ifdef PRINT_THREAD_NUMBER
-    std::cout << "Output thread number: " << threadCounter++ << std::endl;
+    std::cout << "Output thread number: " << ++outputThreadCounter << std::endl;
     #endif
     while (!threadQueue.empty())
     {
@@ -41,9 +43,9 @@ void workerThread(Piece piece, bool* enabled, SimulationData* data)
     std::cout << "Worker thread ID: " << std::this_thread::get_id() << std::endl;
     #endif
     #ifdef PRINT_THREAD_NUMBER
-    std::cout << "Worker thread number: " << threadCounter++ << std::endl;
+    std::cout << "Worker thread number: " << ++workerThreadCounter << std::endl;
     #endif
-    *data = processPiece(piece, enabled);
+    processPiece(piece, enabled, data);
 }
 
 void processPieceRanges(PieceRange pieceRange, bool* enabled, void (*processOutput)(OUTPUT_FUNCTION_ARGS))
@@ -52,7 +54,7 @@ void processPieceRanges(PieceRange pieceRange, bool* enabled, void (*processOutp
     std::cout << "Main thread ID: " << std::this_thread::get_id() << std::endl;
     #endif
     #ifdef PRINT_THREAD_NUMBER
-    std::cout << "Main thread number: " << threadCounter++ << std::endl;
+    std::cout << "Main thread number: " << ++mainThreadCounter << std::endl;
     #endif
     float* speedValues = new float[pieceRange.speed.stepCount + 1];
     float* lengthValues = new float[pieceRange.length.stepCount + 1];
@@ -95,6 +97,7 @@ void processPieceRanges(PieceRange pieceRange, bool* enabled, void (*processOutp
                         if (threadQueue.size() >= threadCount)
                         {
                             (*outputThreadHandle).join();
+                            delete outputThreadHandle;
                             outputThreadHandle = new std::thread(outputThread, processOutput);
                         }
                         SimulationData* data = new SimulationData;
