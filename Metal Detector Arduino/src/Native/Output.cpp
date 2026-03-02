@@ -13,47 +13,47 @@ void ignoreOutput(SimulationData* data)
     return;
 }
 
-void printPiece(Piece piece)
+void printPiece(Piece* piece)
 {
-    cout << "speed: " << piece.speed_m_per_s << endl;
-    cout << "length: " << piece.length_m << endl;
-    cout << "width: " << piece.width_m << endl;
-    cout << "angle: " << piece.angle.angle_deg << endl;
-    cout << "horizontal offset: " << piece.horizontalOffset_m << endl;
+    cout << "speed: " << (*piece).speed_m_per_s << endl;
+    cout << "length: " << (*piece).length_m << endl;
+    cout << "width: " << (*piece).width_m << endl;
+    cout << "angle: " << (*piece).angle.angle_deg << endl;
+    cout << "horizontal offset: " << (*piece).horizontalOffset_m << endl;
 }
 
-void printMeasureData(MeasureData data)
+void printMeasureData(MeasureData* data)
 {
     for (int i = 0; i < 6; i++)
     {
         cout << "sensor i: " << i << endl;
-        cout << "enter time: " << data.sensorData[i].enterTime_s << endl;
-        cout << "exit time: " << data.sensorData[i].exitTime_s << endl;
-        cout << "has entered: " << data.sensorData[i].hasEntered << endl;
-        cout << "has exited: " << data.sensorData[i].hasExited << endl;
+        cout << "enter time: " << (*data).sensorData[i].enterTime_s << endl;
+        cout << "exit time: " << (*data).sensorData[i].exitTime_s << endl;
+        cout << "has entered: " << (*data).sensorData[i].hasEntered << endl;
+        cout << "has exited: " << (*data).sensorData[i].hasExited << endl;
     }
 }
 
-void printMeasurement(Measurement measurement)
+void printMeasurement(Measurement* measurement)
 {
-    cout << "speed: " << measurement.speed_m_per_s << endl;
-    cout << "length: " << measurement.length_m << endl;
-    cout << "width: " << measurement.width_m << endl;
-    cout << "angle: " << measurement.angle_deg << endl;
+    cout << "speed: " << (*measurement).speed_m_per_s << endl;
+    cout << "length: " << (*measurement).length_m << endl;
+    cout << "width: " << (*measurement).width_m << endl;
+    cout << "angle: " << (*measurement).angle_deg << endl;
 }
 
 void printOutput(SimulationData* data)
 {
     #ifdef OUTPUT_PIECE
-    printPiece((*data).piece);
+    printPiece(&(*data).piece);
     #endif
     #ifdef OUTPUT_MEASURE_DATA
-    printMeasureData((*data).measureData);
+    printMeasureData(&(*data).measureData);
     #endif
     #ifdef OUTPUT_MEASUREMENT
     if (validateMeasurements(&(*data).measureData))
     {
-        printMeasurement((*data).measurement);
+        printMeasurement(&(*data).measurement);
     }
     else
     {
@@ -144,48 +144,48 @@ void closeOutputFile()
     outputFile.close();
 }
 
-void writePieceToFile(Piece piece)
+void writePieceToFile(Piece* piece)
 {
     if (!outputFile.is_open())
     {
         return;
     }
-    outputFile.write(reinterpret_cast<const char*>(&piece.speed_m_per_s), sizeof(piece.speed_m_per_s));
-    outputFile.write(reinterpret_cast<const char*>(&piece.length_m), sizeof(piece.length_m));
-    outputFile.write(reinterpret_cast<const char*>(&piece.width_m), sizeof(piece.width_m));
-    outputFile.write(reinterpret_cast<const char*>(&piece.angle.angle_deg), sizeof(piece.angle.angle_deg));
-    outputFile.write(reinterpret_cast<const char*>(&piece.horizontalOffset_m), sizeof(piece.horizontalOffset_m));
+    outputFile.write(reinterpret_cast<const char*>(&(*piece).speed_m_per_s), sizeof((*piece).speed_m_per_s));
+    outputFile.write(reinterpret_cast<const char*>(&(*piece).length_m), sizeof((*piece).length_m));
+    outputFile.write(reinterpret_cast<const char*>(&(*piece).width_m), sizeof((*piece).width_m));
+    outputFile.write(reinterpret_cast<const char*>(&(*piece).angle.angle_deg), sizeof((*piece).angle.angle_deg));
+    outputFile.write(reinterpret_cast<const char*>(&(*piece).horizontalOffset_m), sizeof((*piece).horizontalOffset_m));
 }
 
-void writeMeasureDataToFile(MeasureData data)
+void writeMeasureDataToFile(MeasureData* data)
 {
     for (int i = 0; i < 6; ++i)
     {
-        outputFile.write(reinterpret_cast<const char*>(&data.sensorData[i].enterTime_s), sizeof(data.sensorData[i].enterTime_s));
-        outputFile.write(reinterpret_cast<const char*>(&data.sensorData[i].exitTime_s), sizeof(data.sensorData[i].exitTime_s));
-        outputFile.write(reinterpret_cast<const char*>(&data.sensorData[i].hasEntered), sizeof(data.sensorData[i].hasEntered));
-        outputFile.write(reinterpret_cast<const char*>(&data.sensorData[i].hasExited), sizeof(data.sensorData[i].hasExited));
+        outputFile.write(reinterpret_cast<const char*>(&(*data).sensorData[i].enterTime_s), sizeof((*data).sensorData[i].enterTime_s));
+        outputFile.write(reinterpret_cast<const char*>(&(*data).sensorData[i].exitTime_s), sizeof((*data).sensorData[i].exitTime_s));
+        outputFile.write(reinterpret_cast<const char*>(&(*data).sensorData[i].hasEntered), sizeof((*data).sensorData[i].hasEntered));
+        outputFile.write(reinterpret_cast<const char*>(&(*data).sensorData[i].hasExited), sizeof((*data).sensorData[i].hasExited));
     }
 }
 
-void writeMeasurementToFile(Measurement measurement)
+void writeMeasurementToFile(Measurement* measurement)
 {
-    outputFile.write(reinterpret_cast<const char*>(&measurement.speed_m_per_s), sizeof(measurement.speed_m_per_s));
-    outputFile.write(reinterpret_cast<const char*>(&measurement.length_m), sizeof(measurement.length_m));
-    outputFile.write(reinterpret_cast<const char*>(&measurement.width_m), sizeof(measurement.width_m));
-    outputFile.write(reinterpret_cast<const char*>(&measurement.angle_deg), sizeof(measurement.angle_deg));
+    outputFile.write(reinterpret_cast<const char*>(&(*measurement).speed_m_per_s), sizeof((*measurement).speed_m_per_s));
+    outputFile.write(reinterpret_cast<const char*>(&(*measurement).length_m), sizeof((*measurement).length_m));
+    outputFile.write(reinterpret_cast<const char*>(&(*measurement).width_m), sizeof((*measurement).width_m));
+    outputFile.write(reinterpret_cast<const char*>(&(*measurement).angle_deg), sizeof((*measurement).angle_deg));
 }
 
 
 void writeOutputToFile(SimulationData* data)
 {
     #ifdef OUTPUT_PIECE
-    writePieceToFile((*data).piece);
+    writePieceToFile(&(*data).piece);
     #endif
     #ifdef OUTPUT_MEASURE_DATA
-    writeMeasureDataToFile((*data).measureData);
+    writeMeasureDataToFile(&(*data).measureData);
     #endif
     #ifdef OUTPUT_MEASUREMENT
-    writeMeasurementToFile((*data).measurement);
+    writeMeasurementToFile(&(*data).measurement);
     #endif
 }
