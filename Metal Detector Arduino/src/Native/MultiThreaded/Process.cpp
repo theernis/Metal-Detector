@@ -25,16 +25,13 @@ void outputThread(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
     #endif
     while (!threadQueue.empty())
     {
-        if (!threadQueue.empty())
-        {
-            ThreadData* threadData = threadQueue.front();
-            threadQueue.pop();
-            (*threadData).thread->join();
-            processOutput((*threadData).data);
-            delete (*threadData).thread;
-            delete (*threadData).data;
-            delete threadData;
-        }
+        ThreadData* threadData = threadQueue.front();
+        threadQueue.pop();
+        (*threadData).thread->join();
+        processOutput((*threadData).data);
+        delete (*threadData).thread;
+        delete (*threadData).data;
+        delete threadData;
     }
 }
 
