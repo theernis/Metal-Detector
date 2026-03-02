@@ -1,5 +1,12 @@
 #include "Process.h"
 
+//#define PRINT_THREAD_ID
+#define PRINT_THREAD_NUMBER
+
+#ifdef PRINT_THREAD_NUMBER
+int threadCounter = 0;
+#endif
+
 struct ThreadData
 {
     std::thread* thread;
@@ -8,9 +15,15 @@ struct ThreadData
 
 std::queue<ThreadData*> threadQueue;
 
-void outputThread(bool* working, void (*processOutput)(OUTPUT_FUNCTION_ARGS))
+void outputThread(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
 {
-    while (*working || !threadQueue.empty())
+    #ifdef PRINT_THREAD_ID
+    std::cout << "Output thread ID: " << std::this_thread::get_id() << std::endl;
+    #endif
+    #ifdef PRINT_THREAD_NUMBER
+    std::cout << "Output thread number: " << threadCounter++ << std::endl;
+    #endif
+    while (!threadQueue.empty())
     {
         if (!threadQueue.empty())
         {
@@ -27,11 +40,23 @@ void outputThread(bool* working, void (*processOutput)(OUTPUT_FUNCTION_ARGS))
 
 void workerThread(Piece piece, bool* enabled, SimulationData* data)
 {
+    #ifdef PRINT_THREAD_ID
+    std::cout << "Worker thread ID: " << std::this_thread::get_id() << std::endl;
+    #endif
+    #ifdef PRINT_THREAD_NUMBER
+    std::cout << "Worker thread number: " << threadCounter++ << std::endl;
+    #endif
     *data = processPiece(piece, enabled);
 }
 
 void processPieceRanges(PieceRange pieceRange, bool* enabled, void (*processOutput)(OUTPUT_FUNCTION_ARGS))
 {
+    #ifdef PRINT_THREAD_ID
+    std::cout << "Main thread ID: " << std::this_thread::get_id() << std::endl;
+    #endif
+    #ifdef PRINT_THREAD_NUMBER
+    std::cout << "Main thread number: " << threadCounter++ << std::endl;
+    #endif
     float* speedValues = new float[pieceRange.speed.stepCount + 1];
     float* lengthValues = new float[pieceRange.length.stepCount + 1];
     float* widthValues = new float[pieceRange.width.stepCount + 1];
@@ -58,8 +83,8 @@ void processPieceRanges(PieceRange pieceRange, bool* enabled, void (*processOutp
         horizontalOffsetValues[horizontalOffset] = getRangeValue(pieceRange.horizontalOffset, horizontalOffset);
     }
     
-    bool working = true;
-    std::thread outputThreadHandle(outputThread, &working, processOutput);
+    std::thread* outputThreadHandle = new std::thread(outputThread, processOutput);
+    int threadCount = std::thread::hardware_concurrency();
     for (int speed = 0; speed <= pieceRange.speed.stepCount; speed++)
     {
         for (int length = 0; length <= pieceRange.length.stepCount; length++)
@@ -70,6 +95,11 @@ void processPieceRanges(PieceRange pieceRange, bool* enabled, void (*processOutp
                 {
                     for (int horizontalOffset = 0; horizontalOffset <= pieceRange.horizontalOffset.stepCount; horizontalOffset++)
                     {
+                        if (threadQueue.size() >= threadCount)
+                        {
+                            (*outputThreadHandle).join();
+                            outputThreadHandle = new std::thread(outputThread, processOutput);
+                        }
                         SimulationData* data = new SimulationData;
                         std::thread* thread = new std::thread(workerThread, (Piece){speedValues[speed], lengthValues[length], widthValues[width], angleDeg(angleValues[angle]), horizontalOffsetValues[horizontalOffset]}, enabled, data);
                         ThreadData* threadData = new ThreadData{thread, data};
@@ -80,8 +110,8 @@ void processPieceRanges(PieceRange pieceRange, bool* enabled, void (*processOutp
         }
     }
 
-    working = false;
-    outputThreadHandle.join();
+    (*outputThreadHandle).join();
+    delete outputThreadHandle;
     delete[] speedValues;
     delete[] lengthValues;
     delete[] widthValues;
