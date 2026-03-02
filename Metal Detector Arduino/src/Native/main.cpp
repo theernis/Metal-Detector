@@ -8,7 +8,7 @@
 
 using namespace std;
 
-#define TEST
+//#define TEST
 
 enum OutputMode {
     IGNORE,

@@ -5,17 +5,18 @@ struct ThreadData {
     SimulationData* data;
 };
 
-std::queue<ThreadData> threadQueue;
+std::queue<ThreadData*> threadQueue;
 
 void outputThread(bool* working, void (*processOutput)(OUTPUT_FUNCTION_ARGS)) {
     while (*working || !threadQueue.empty()) {
         if (!threadQueue.empty()) {
-            ThreadData threadData = threadQueue.front();
+            ThreadData* threadData = threadQueue.front();
             threadQueue.pop();
-            threadData.thread->join();
-            processOutput(threadData.data);
-            delete threadData.thread;
-            delete threadData.data;
+            (*threadData).thread->join();
+            processOutput((*threadData).data);
+            delete (*threadData).thread;
+            delete (*threadData).data;
+            delete threadData;
         }
     }
 }
@@ -65,7 +66,8 @@ void processPieceRanges(PieceRange pieceRange, bool* enabled, void (*processOutp
                     {
                         SimulationData* data = new SimulationData;
                         std::thread* thread = new std::thread(workerThread, (Piece){speedValues[speed], lengthValues[length], widthValues[width], angleDeg(angleValues[angle]), horizontalOffsetValues[horizontalOffset]}, enabled, data);
-                        threadQueue.push({thread, data});
+                        ThreadData* threadData = new ThreadData{thread, data};
+                        threadQueue.push(threadData);
                     }
                 }
             }
