@@ -7,10 +7,10 @@
 
 struct Measurement
 {
-  float speed_m_per_s = NAN; // m/s
-  float length_m = NAN; // m
-  float width_m = NAN; // m
-  float angle_deg = NAN; // degrees
+    float speed_m_per_s = NAN; // m/s
+    float length_m = NAN; // m
+    float width_m = NAN; // m
+    float angle_deg = NAN; // degrees
 };
 
 Measurement processMeasuredData(MeasureData data);

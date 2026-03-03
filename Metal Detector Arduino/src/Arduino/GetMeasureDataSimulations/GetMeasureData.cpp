@@ -12,8 +12,8 @@ void collectMeasurements(MeasureData* data, MetalDetectorArray* sensors) {
     // collect data
     calculateMeasurementData(data, sensors->_enabled, pieces[pieceIndex]);
     // reset data in case of invalid data
-    if (!(*data).sensorData[0].hasExited && (*data).sensorData[3].hasExited) {
-        resetMeasurements(data, (*data).count);
+    if (!data->sensorData[0].hasExited && data->sensorData[3].hasExited) {
+        resetMeasurements(data, data->count);
     }
     // roll next piece
     pieceIndex = (pieceIndex+1)%pieceCount;

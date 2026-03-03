@@ -56,21 +56,21 @@ void calculateSensorData(SensorData* sensorData, int sensorIndex, Piece* piece)
         float entryTime = entryPoint / _piece.speed_m_per_s;
         float exitTime = exitPoint / _piece.speed_m_per_s;
 
-        (*sensorData).enterTime_s = entryTime;
-        (*sensorData).exitTime_s = exitTime;
-        (*sensorData).hasEntered = true;
-        (*sensorData).hasExited = true;
+        sensorData->enterTime_s = entryTime;
+        sensorData->exitTime_s = exitTime;
+        sensorData->hasEntered = true;
+        sensorData->hasExited = true;
     }
 }
 
 // calculate measurement data
 void calculateMeasurementData(MeasureData* data, bool* enabled, Piece piece)
 {
-    for (int i = 0; i < (*data).count; i++)
+    for (int i = 0; i < data->count; i++)
     {
         if (enabled[i] == true)
         {
-            calculateSensorData(&(*data).sensorData[i], i, &piece);
+            calculateSensorData(&(data->sensorData[i]), i, &piece);
         }
     }
 }

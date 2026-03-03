@@ -6,16 +6,16 @@
 
 struct SensorData
 {
-  float enterTime_s = NAN;
-  float exitTime_s = NAN;
-  bool hasEntered = false;
-  bool hasExited = false;
+    float enterTime_s = NAN;
+    float exitTime_s = NAN;
+    bool hasEntered = false;
+    bool hasExited = false;
 };
 
 struct MeasureData
 {
-  int count;
-  SensorData* sensorData = nullptr;
+    int count;
+    SensorData* sensorData = nullptr;
 };
 
 void resetMeasurements(MeasureData* data, int sensorCount);

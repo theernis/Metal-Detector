@@ -29,10 +29,10 @@ void outputThread(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
     {
         ThreadData* threadData = threadQueue.front();
         threadQueue.pop();
-        (*threadData).thread->join();
-        processOutput((*threadData).data);
-        delete (*threadData).thread;
-        delete (*threadData).data;
+        threadData->thread->join();
+        processOutput(threadData->data);
+        delete threadData->thread;
+        delete threadData->data;
         delete threadData;
     }
 }
@@ -96,7 +96,7 @@ void processPieceRanges(PieceRange pieceRange, bool* enabled, void (*processOutp
                     {
                         if (threadQueue.size() >= threadCount)
                         {
-                            (*outputThreadHandle).join();
+                            outputThreadHandle->join();
                             delete outputThreadHandle;
                             outputThreadHandle = new std::thread(outputThread, processOutput);
                         }
@@ -110,7 +110,7 @@ void processPieceRanges(PieceRange pieceRange, bool* enabled, void (*processOutp
         }
     }
 
-    (*outputThreadHandle).join();
+    outputThreadHandle->join();
     delete outputThreadHandle;
     delete[] speedValues;
     delete[] lengthValues;
