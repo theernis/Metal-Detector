@@ -29,5 +29,5 @@ Angle angleDeg(float angle_deg)
 
 Angle angleRad(float angle_rad)
 {
-    return (Angle){(float)DEG(angle_rad), angle_rad, fastSinDeg(DEG(angle_rad)), fastCosDeg(DEG(angle_rad)), fastTanDeg(DEG(angle_rad))};
+    return (Angle){(float)DEG(angle_rad), angle_rad, fastSinRad(angle_rad), fastCosRad(angle_rad), fastTanRad(angle_rad)};
 }

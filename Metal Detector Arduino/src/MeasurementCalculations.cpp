@@ -96,14 +96,16 @@ float calculateAngle_deg(MeasureData data, float speed_m_per_s)
     if (angleCount == 2)
     {
         // choose the one closer to 0
+        float angle1 = angleRanges[0].middle_deg;
+        float angle2 = angleRanges[1].middle_deg;
         delete[] angleRanges;
-        if (((angleRanges[0].middle_deg < 0) ? -angleRanges[0].middle_deg : angleRanges[0].middle_deg) < ((angleRanges[1].middle_deg < 0) ? -angleRanges[1].middle_deg : angleRanges[1].middle_deg))
+        if (((angle1 < 0) ? -angle1 : angle1) < ((angle2 < 0) ? -angle2 : angle2))
         {
-            return angleRanges[0].middle_deg;
+            return angle1;
         }
         else
         {
-            return angleRanges[1].middle_deg;
+            return angle2;
         }
     }
 
