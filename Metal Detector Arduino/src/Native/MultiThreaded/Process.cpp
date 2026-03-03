@@ -50,6 +50,11 @@ void workerThread(Piece piece, bool* enabled, SimulationData* data)
 
 void processPieceRanges(PieceRange pieceRange, bool* enabled, void (*processOutput)(OUTPUT_FUNCTION_ARGS))
 {
+    // initialize lookup tables
+    fastSinDeg(0);
+    fastCosDeg(0);
+    fastTanDeg(0);
+
     #ifdef PRINT_THREAD_ID
     std::cout << "Main thread ID: " << std::this_thread::get_id() << std::endl;
     #endif

@@ -39,7 +39,7 @@ static std::filesystem::path getFilename()
 int main()
 {
     void (*outputFunction)(OUTPUT_FUNCTION_ARGS);
-    OutputMode outputMode = WRITE;
+    OutputMode outputMode = IGNORE;
     switch (outputMode)
     {
     case IGNORE:
