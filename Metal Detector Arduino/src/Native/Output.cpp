@@ -1,12 +1,10 @@
 #include <Output.h>
 
-using namespace std;
-
 #define OUTPUT_PIECE
 //#define OUTPUT_MEASURE_DATA
 #define OUTPUT_MEASUREMENT
 
-ofstream outputFile;
+std::ofstream outputFile;
 
 void ignoreOutput(SimulationData* data)
 {
@@ -15,31 +13,31 @@ void ignoreOutput(SimulationData* data)
 
 void printPiece(Piece* piece)
 {
-    cout << "speed: " << piece->speed_m_per_s << endl;
-    cout << "length: " << piece->length_m << endl;
-    cout << "width: " << piece->width_m << endl;
-    cout << "angle: " << piece->angle.angle_deg << endl;
-    cout << "horizontal offset: " << piece->horizontalOffset_m << endl;
+    std::cout << "speed: " << piece->speed_m_per_s << std::endl;
+    std::cout << "length: " << piece->length_m << std::endl;
+    std::cout << "width: " << piece->width_m << std::endl;
+    std::cout << "angle: " << piece->angle.angle_deg << std::endl;
+    std::cout << "horizontal offset: " << piece->horizontalOffset_m << std::endl;
 }
 
 void printMeasureData(MeasureData* data)
 {
     for (int i = 0; i < 6; i++)
     {
-        cout << "sensor i: " << i << endl;
-        cout << "enter time: " << data->sensorData[i].enterTime_s << endl;
-        cout << "exit time: " << data->sensorData[i].exitTime_s << endl;
-        cout << "has entered: " << data->sensorData[i].hasEntered << endl;
-        cout << "has exited: " << data->sensorData[i].hasExited << endl;
+        std::cout << "sensor i: " << i << std::endl;
+        std::cout << "enter time: " << data->sensorData[i].enterTime_s << std::endl;
+        std::cout << "exit time: " << data->sensorData[i].exitTime_s << std::endl;
+        std::cout << "has entered: " << data->sensorData[i].hasEntered << std::endl;
+        std::cout << "has exited: " << data->sensorData[i].hasExited << std::endl;
     }
 }
 
 void printMeasurement(Measurement* measurement)
 {
-    cout << "speed: " << measurement->speed_m_per_s << endl;
-    cout << "length: " << measurement->length_m << endl;
-    cout << "width: " << measurement->width_m << endl;
-    cout << "angle: " << measurement->angle_deg << endl;
+    std::cout << "speed: " << measurement->speed_m_per_s << std::endl;
+    std::cout << "length: " << measurement->length_m << std::endl;
+    std::cout << "width: " << measurement->width_m << std::endl;
+    std::cout << "angle: " << measurement->angle_deg << std::endl;
 }
 
 void printOutput(SimulationData* data)
@@ -57,43 +55,43 @@ void printOutput(SimulationData* data)
     }
     else
     {
-        cout << "insufficient measurements" << endl;
+        std::cout << "insufficient measurements" << std::endl;
     }
     #endif
-    cout << endl;
+    std::cout << std::endl;
 }
 
 void createParserFile(const std::filesystem::path &filepath)
 {
     std::filesystem::path parserPath = filepath;
     parserPath += ".parser";
-    ofstream parserFile(parserPath.string());
+    std::ofstream parserFile(parserPath.string());
     if (!parserFile)
     {
         std::cerr << "Failed to open parser file '" << parserPath << "'\n";
         return;
     }
     #ifdef OUTPUT_PIECE
-    parserFile << "Piece_speed_m_per_s:float:" << sizeof(float) << endl;
-    parserFile << "Piece_length_m:float:" << sizeof(float) << endl;
-    parserFile << "Piece_width_m:float:" << sizeof(float) << endl;
-    parserFile << "Piece_angle_deg:float:" << sizeof(float) << endl;
-    parserFile << "Piece_horizontalOffset_m:float:" << sizeof(float) << endl;
+    parserFile << "Piece_speed_m_per_s:float:" << sizeof(float) << std::endl;
+    parserFile << "Piece_length_m:float:" << sizeof(float) << std::endl;
+    parserFile << "Piece_width_m:float:" << sizeof(float) << std::endl;
+    parserFile << "Piece_angle_deg:float:" << sizeof(float) << std::endl;
+    parserFile << "Piece_horizontalOffset_m:float:" << sizeof(float) << std::endl;
     #endif
     #ifdef OUTPUT_MEASURE_DATA
     for (int i = 0; i < 6; i++)
     {
-        parserFile << "MeasureData_sensorData_" << i << "_enterTime_s:float:" << sizeof(float) << endl;
-        parserFile << "MeasureData_sensorData_" << i << "_exitTime_s:float:" << sizeof(float) << endl;
-        parserFile << "MeasureData_sensorData_" << i << "_hasEntered:bool:" << sizeof(bool) << endl;
-        parserFile << "MeasureData_sensorData_" << i << "_hasExited:bool:" << sizeof(bool) << endl;
+        parserFile << "MeasureData_sensorData_" << i << "_enterTime_s:float:" << sizeof(float) << std::endl;
+        parserFile << "MeasureData_sensorData_" << i << "_exitTime_s:float:" << sizeof(float) << std::endl;
+        parserFile << "MeasureData_sensorData_" << i << "_hasEntered:bool:" << sizeof(bool) << std::endl;
+        parserFile << "MeasureData_sensorData_" << i << "_hasExited:bool:" << sizeof(bool) << std::endl;
     }
     #endif
     #ifdef OUTPUT_MEASUREMENT
-    parserFile << "Measurement_speed_m_per_s:float:" << sizeof(float) << endl;
-    parserFile << "Measurement_length_m:float:" << sizeof(float) << endl;
-    parserFile << "Measurement_width_m:float:" << sizeof(float) << endl;
-    parserFile << "Measurement_angle_deg:float:" << sizeof(float) << endl;
+    parserFile << "Measurement_speed_m_per_s:float:" << sizeof(float) << std::endl;
+    parserFile << "Measurement_length_m:float:" << sizeof(float) << std::endl;
+    parserFile << "Measurement_width_m:float:" << sizeof(float) << std::endl;
+    parserFile << "Measurement_angle_deg:float:" << sizeof(float) << std::endl;
     #endif
     parserFile.close();
 }

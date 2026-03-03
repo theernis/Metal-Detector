@@ -19,7 +19,7 @@ float calculateLength_m(MeasureData data, float speed_m_per_s)
     for (int i = 1; i < data.count; i++)
     {
         newTime_s = (data.sensorData[i].exitTime_s - data.sensorData[i].enterTime_s);
-        time_s = (newTime_s > time_s) ? newTime_s : time_s;
+        time_s = maxFloat(time_s, newTime_s);
     }
     return time_s * speed_m_per_s;
 }
@@ -99,7 +99,7 @@ float calculateAngle_deg(MeasureData data, float speed_m_per_s)
         float angle1 = angleRanges[0].middle_deg;
         float angle2 = angleRanges[1].middle_deg;
         delete[] angleRanges;
-        if (((angle1 < 0) ? -angle1 : angle1) < ((angle2 < 0) ? -angle2 : angle2))
+        if (absFloat(angle1) < absFloat(angle2))
         {
             return angle1;
         }
@@ -119,14 +119,14 @@ float calculateAngle_deg(MeasureData data, float speed_m_per_s)
         float diffMiddle = angleRanges[i].middle_deg-average.middle_deg;
         float diffRight = angleRanges[i].right_deg-average.right_deg;
             
-        diffSum.left_deg += (diffLeft < 0) ? -diffLeft : diffLeft;
-        diffSum.middle_deg += (diffMiddle < 0) ? -diffMiddle : diffMiddle;
-        diffSum.right_deg += (diffRight < 0) ? -diffRight : diffRight;
+        diffSum.left_deg += absFloat(diffLeft);
+        diffSum.middle_deg += absFloat(diffMiddle);
+        diffSum.right_deg += absFloat(diffRight);
     }
     Angles diffAverage = {diffSum.left_deg/angleCount, diffSum.middle_deg/angleCount, diffSum.right_deg/angleCount};
     // find smallest difference
-    float diff = (diffAverage.left_deg < diffAverage.middle_deg) ? diffAverage.left_deg : diffAverage.middle_deg;
-    diff = (diff < diffAverage.right_deg) ? diff : diffAverage.right_deg;
+    float diff = minFloat(diffAverage.left_deg, diffAverage.middle_deg);
+    diff = minFloat(diff, diffAverage.right_deg);
 
     // count average angle excluding anomolies
     float angleSum = 0;
@@ -137,7 +137,7 @@ float calculateAngle_deg(MeasureData data, float speed_m_per_s)
         for (int i = 0; i < angleCount; i++)
         {
             float tempDiff = (angleRanges[i].left_deg - average.left_deg);
-            if (((tempDiff < 0) ? -tempDiff : tempDiff) <= diff)
+            if (absFloat(tempDiff) <= diff)
             {
                 angleSum += angleRanges[i].left_deg;
                 newAngleCount++;
@@ -149,7 +149,7 @@ float calculateAngle_deg(MeasureData data, float speed_m_per_s)
         for (int i = 0; i < angleCount; i++)
         {
             float tempDiff = (angleRanges[i].middle_deg - average.middle_deg);
-            if (((tempDiff < 0) ? -tempDiff : tempDiff) <= diff)
+            if (absFloat(tempDiff) <= diff)
             {
                 angleSum += angleRanges[i].middle_deg;
                 newAngleCount++;
@@ -161,7 +161,7 @@ float calculateAngle_deg(MeasureData data, float speed_m_per_s)
         for (int i = 0; i < angleCount; i++)
         {
             float tempDiff = (angleRanges[i].right_deg - average.right_deg);
-            if (((tempDiff < 0) ? -tempDiff : tempDiff) <= diff)
+            if (absFloat(tempDiff) <= diff)
             {
                 angleSum += angleRanges[i].right_deg;
                 newAngleCount++;
@@ -231,7 +231,7 @@ void adjustOnAngle(Measurement* result, MeasureData data)
     float x1 = (data.sensorData[mostLeftIndex].exitTime_s - data.sensorData[mostLeftIndex].enterTime_s) * (*result).speed_m_per_s; // length measured by most left sensor
     float x2 = (data.sensorData[mostRightIndex].exitTime_s - data.sensorData[mostRightIndex].enterTime_s) * (*result).speed_m_per_s; // length measured by most right sensor
     newWidth = d/fastCosDeg(angle) + (x1 + x2 - (*result).length_m) * fastSinDeg(angle);
-    newWidth = (newWidth < 0) ? -newWidth : newWidth;
+    newWidth = absFloat(newWidth);
 
     (*result).length_m = newLength;
     (*result).width_m = newWidth;

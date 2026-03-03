@@ -17,8 +17,10 @@ Position T(Position P, Position C, float sinVal, float cosVal)
 // treshold > 1 point is outside the piece
 float treshold(Position relativePoint, Piece piece)
 {
-    float xDistance = ((xDistance = relativePoint.x/piece.width_m) < 0) ? -xDistance : xDistance;
-    float yDistance = ((yDistance = relativePoint.y/piece.length_m) < 0) ? -yDistance : yDistance;
+    float xDistance = relativePoint.x/piece.width_m;
+    xDistance = absFloat(xDistance);
+    float yDistance = relativePoint.y/piece.length_m;
+    yDistance = absFloat(yDistance);
 
-    return 2 * ((xDistance > yDistance) ? xDistance : yDistance);
+    return 2 * maxFloat(xDistance, yDistance);
 }

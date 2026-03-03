@@ -24,7 +24,7 @@ void calculateSensorData(SensorData* sensorData, int sensorIndex, Piece* piece)
         if (!(fastIsNAN(collisionPoints[i].x) || fastIsNAN(collisionPoints[i].y)))
         {
             float edgeDistance = treshold(collisionPoints[i], *piece) - 1;
-            edgeDistance = (edgeDistance > 0) ? edgeDistance : -edgeDistance;
+            edgeDistance = absFloat(edgeDistance);
             if (edgeDistance <= 0.00001f)
             {
                 // calculate distance to the collision point along the piece's movement direction and determine if it's an entry or exit point

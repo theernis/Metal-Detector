@@ -4,6 +4,7 @@
 #include <cmath>
 #include "SimulationData.h"
 #include "FastTrigonometry.h"
+#include "FastComparisons.h"
 
 #ifndef PI
 #define PI M_PI

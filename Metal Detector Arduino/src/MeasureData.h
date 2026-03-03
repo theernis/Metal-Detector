@@ -2,7 +2,7 @@
 #define MEASUREDATA_H
 
 #include <cmath>
-#include "FastNAN.h"
+#include "FastComparisons.h"
 
 struct SensorData
 {

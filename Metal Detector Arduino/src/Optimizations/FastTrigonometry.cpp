@@ -1,7 +1,6 @@
 #include "FastTrigonometry.h"
 
 #include <iostream>
-using namespace std;
 
 #define ENABLE_LOOKUP
 #define ENABLE_MISS_COUNT
@@ -113,6 +112,6 @@ float fastTanDeg(float deg)
 void missCount()
 {
     #ifdef ENABLE_MISS_COUNT
-    cout << miss << "/" << call << endl;
+    std::cout << miss << "/" << call << std::endl;
     #endif
 }

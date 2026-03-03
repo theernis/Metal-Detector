@@ -6,8 +6,6 @@
 
 #include "Process.h"
 
-using namespace std;
-
 //#define TEST
 
 enum OutputMode
