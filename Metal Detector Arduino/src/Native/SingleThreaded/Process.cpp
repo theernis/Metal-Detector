@@ -37,7 +37,9 @@ void processPieceRanges(PieceRange pieceRange, bool* enabled, void (*processOutp
                 {
                     for (int horizontalOffset = 0; horizontalOffset <= pieceRange.horizontalOffset.stepCount; horizontalOffset++)
                     {
-                        processPiece((Piece){speedValues[speed], lengthValues[length], widthValues[width], angleDeg(angleValues[angle]), horizontalOffsetValues[horizontalOffset]}, enabled, processOutput);
+                        SimulationData data;
+                        processPiece((Piece){speedValues[speed], lengthValues[length], widthValues[width], angleDeg(angleValues[angle]), horizontalOffsetValues[horizontalOffset]}, enabled, &data);
+                        processOutput(&data);
                     }
                 }
             }

@@ -29,7 +29,10 @@ void outputThread(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
     {
         ThreadData* threadData = threadQueue.front();
         threadQueue.pop();
-        threadData->thread->join();
+        if (threadData->thread->joinable())
+        {
+            threadData->thread->join();
+        }
         processOutput(threadData->data);
         delete threadData->thread;
         delete threadData->data;
