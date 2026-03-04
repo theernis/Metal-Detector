@@ -15,14 +15,13 @@ enum OutputMode
     WRITE
 };
 
-// helper to ensure Desktop/Simulations exists and return its path
+// helper to ensure Desktop/Simulations directory exists and return its path
 static std::filesystem::path getFilename()
 {
-    namespace fs = std::filesystem;
     const char *userProfile = std::getenv("USERPROFILE");
-    fs::path base = userProfile ? fs::path(userProfile) : fs::current_path();
-    fs::path dir = base / "Desktop" / "Simulations";
-    fs::create_directories(dir);
+    std::filesystem::path base = userProfile ? std::filesystem::path(userProfile) : std::filesystem::current_path();
+    std::filesystem::path dir = base / "Desktop" / "Simulations";
+    std::filesystem::create_directories(dir);
     time_t startTime;
     time(&startTime);
     std::string baseName = ctime(&startTime);
