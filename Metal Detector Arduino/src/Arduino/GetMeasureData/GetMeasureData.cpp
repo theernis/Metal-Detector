@@ -1,6 +1,7 @@
 #include "GetMeasureData.h"
 
 
+// collects measurements from sensors
 void collectMeasurements(MeasureData* data, MetalDetectorArray* sensors)
 {
     // collect data

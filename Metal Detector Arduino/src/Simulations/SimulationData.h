@@ -3,6 +3,7 @@
 
 #include "FastTrigonometry.h"
 
+// structure for angle with precalculated values
 struct Angle
 {
     float angle_deg; // deg
@@ -12,6 +13,7 @@ struct Angle
     float tanVal;
 };
 
+// structure for simulated piece
 struct Piece
 {
     float speed_m_per_s; // m/s
@@ -24,7 +26,9 @@ struct Piece
 extern int pieceCount;
 extern Piece pieces[];
 
+// create angle structure from degree value
 Angle angleDeg(float angle_deg);
+// create angle structure from radian value
 Angle angleRad(float angle_rad);
 
 #endif

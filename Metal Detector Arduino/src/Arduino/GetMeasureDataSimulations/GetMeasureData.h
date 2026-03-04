@@ -5,6 +5,7 @@
 #include "MeasureData.h"
 #include "CalculateMeasureData.h"
 
+// collects measurements from sensors
 void collectMeasurements(MeasureData* data, MetalDetectorArray* sensors);
 
 #endif

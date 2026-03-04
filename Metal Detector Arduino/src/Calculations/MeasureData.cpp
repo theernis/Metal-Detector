@@ -1,7 +1,7 @@
 #include "MeasureData.h"
 
 
-// reset measured data
+// resets (or initializes) MeasureData struct
 void resetMeasurements(MeasureData* data, int sensorCount)
 {
     // set count
@@ -16,7 +16,7 @@ void resetMeasurements(MeasureData* data, int sensorCount)
     data->sensorData = new SensorData[sensorCount];
 }
 
-// check if sufficient data is collected
+// validates MeasureData struct to confirm enough data is collected
 bool validateMeasurements(MeasureData* data)
 {
     bool allExited = true;

@@ -6,11 +6,13 @@
 
 std::ofstream outputFile;
 
+// ignore output (for performance testing)
 void ignoreOutput(SimulationData* data)
 {
     return;
 }
 
+// print Piece to console (for debugging)
 void printPiece(Piece* piece)
 {
     std::cout << "speed: " << piece->speed_m_per_s << std::endl;
@@ -20,6 +22,7 @@ void printPiece(Piece* piece)
     std::cout << "horizontal offset: " << piece->horizontalOffset_m << std::endl;
 }
 
+// print MeasureData to console (for debugging)
 void printMeasureData(MeasureData* data)
 {
     for (int i = 0; i < 6; i++)
@@ -32,6 +35,7 @@ void printMeasureData(MeasureData* data)
     }
 }
 
+// print Measurement to console (for debugging)
 void printMeasurement(Measurement* measurement)
 {
     std::cout << "speed: " << measurement->speed_m_per_s << std::endl;
@@ -40,6 +44,7 @@ void printMeasurement(Measurement* measurement)
     std::cout << "angle: " << measurement->angle_deg << std::endl;
 }
 
+// print output to console (for debugging)
 void printOutput(SimulationData* data)
 {
     #ifdef OUTPUT_PIECE
@@ -61,6 +66,7 @@ void printOutput(SimulationData* data)
     std::cout << std::endl;
 }
 
+// create parser file for output (for data collection)
 void createParserFile(const std::filesystem::path &filepath)
 {
     std::filesystem::path parserPath = filepath;
@@ -96,6 +102,7 @@ void createParserFile(const std::filesystem::path &filepath)
     parserFile.close();
 }
 
+// sanitize string for use in filename (replace ':' and ' ' with '_')
 static std::string sanitizeString(const std::string &input)
 {
     std::string result = input;
@@ -109,6 +116,7 @@ static std::string sanitizeString(const std::string &input)
     return result;
 }
 
+// open output file (for data collection)
 void openOutputFile(const std::filesystem::path &filepath)
 {
     if (outputFile.is_open())
@@ -137,11 +145,13 @@ void openOutputFile(const std::filesystem::path &filepath)
     createParserFile(sanitized);
 }
 
+// close output file (for data collection)
 void closeOutputFile()
 {
     outputFile.close();
 }
 
+// write output to file (for data collection)
 void writePieceToFile(Piece* piece)
 {
     if (!outputFile.is_open())
@@ -155,6 +165,7 @@ void writePieceToFile(Piece* piece)
     outputFile.write(reinterpret_cast<const char*>(&piece->horizontalOffset_m), sizeof(piece->horizontalOffset_m));
 }
 
+// write output to file (for data collection)
 void writeMeasureDataToFile(MeasureData* data)
 {
     for (int i = 0; i < 6; ++i)
@@ -166,6 +177,7 @@ void writeMeasureDataToFile(MeasureData* data)
     }
 }
 
+// write output to file (for data collection)
 void writeMeasurementToFile(Measurement* measurement)
 {
     outputFile.write(reinterpret_cast<const char*>(&measurement->speed_m_per_s), sizeof(measurement->speed_m_per_s));
@@ -174,7 +186,7 @@ void writeMeasurementToFile(Measurement* measurement)
     outputFile.write(reinterpret_cast<const char*>(&measurement->angle_deg), sizeof(measurement->angle_deg));
 }
 
-
+// write output to file (for data collection)
 void writeOutputToFile(SimulationData* data)
 {
     #ifdef OUTPUT_PIECE

@@ -7,7 +7,11 @@
 #include "Range.h"
 #include "Output.h"
 
+// process piece data and calculate measurements
+// returns processed data in SimulationData struct
 void processPiece(Piece piece, bool* enabled, SimulationData* data);
+
+// test function to process all pieces from SimulationData and output results
 void test(void (*processOutput)(SimulationData*));
 
 #endif

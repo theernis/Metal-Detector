@@ -47,6 +47,7 @@ float calculateAngle_deg(MeasureData data, float speed_m_per_s)
 {
     int angleCount = 0;
 
+    // calculate all the angles in advance
     float* angles = new float[data.count-2];
     for (int i = 0; i < data.count - 2; i++)
     {
@@ -200,6 +201,7 @@ float calculateAngle_deg(MeasureData data, float speed_m_per_s)
     // I give up for real this time, I don't think I can improve it any more
 }
 
+// adjust measurements based on angle
 void adjustOnAngle(Measurement* result, MeasureData data)
 {
     if ((*result).angle_deg == 0.00f)
@@ -237,6 +239,7 @@ void adjustOnAngle(Measurement* result, MeasureData data)
     (*result).width_m = newWidth;
 }
 
+// calculate Measurement from MeasureData
 Measurement processMeasuredData(MeasureData data)
 {
     Measurement result;

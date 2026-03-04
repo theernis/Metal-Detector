@@ -1,5 +1,7 @@
 #include "ProcessPiece.h"
 
+// process piece data and calculate measurements
+// returns processed data in SimulationData struct
 void processPiece(Piece piece, bool* enabled, SimulationData* data)
 {
     static MeasureData measureData;
@@ -10,6 +12,7 @@ void processPiece(Piece piece, bool* enabled, SimulationData* data)
     *data = (SimulationData){piece, measureData, measurement};
 }
 
+// test function to process all pieces from SimulationData and output results
 void test(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
 {
     bool enabled[] = {true, true, true, true, true, true};

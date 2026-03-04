@@ -5,6 +5,7 @@
 #include "MeasureData.h"
 #include "FastTrigonometry.h"
 
+// struct for calculated measurement data
 struct Measurement
 {
     float speed_m_per_s = NAN; // m/s
@@ -13,6 +14,7 @@ struct Measurement
     float angle_deg = NAN; // degrees
 };
 
+// calculate Measurement from MeasureData
 Measurement processMeasuredData(MeasureData data);
 
 #endif

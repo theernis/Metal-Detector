@@ -3,6 +3,7 @@
 
 const Measurement empty;
 
+// collect data and calculate measurements if enough data is collected
 Measurement measure(MetalDetectorArray* sensors)
 {
     static MeasureData data;

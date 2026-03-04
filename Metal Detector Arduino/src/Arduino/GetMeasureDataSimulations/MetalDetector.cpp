@@ -50,7 +50,6 @@ void MetalDetectorArray::setThreshold(int index, int threshold)
     return;
 }
 
-
 // here for compatibility
 int MetalDetectorArray::getThreshold(int index)
 {

@@ -4,6 +4,7 @@
 // simulated piece data
 int pieceIndex = 0;
 
+// collects measurements from sensors
 void collectMeasurements(MeasureData* data, MetalDetectorArray* sensors) {
     if (millis()%1000 != 0 || pieceCount == 0)
     {

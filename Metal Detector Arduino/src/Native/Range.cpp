@@ -1,5 +1,6 @@
 #include <Range.h>
 
+// functions for creating Range struct
 Range createRange(float start, float end, float step)
 {
     Range range;
@@ -10,6 +11,7 @@ Range createRange(float start, float end, float step)
     return range;
 }
 
+// get value from range by index
 float getRangeValue(Range range, int index)
 {
     return range.start + index * range.step;

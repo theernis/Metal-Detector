@@ -3,8 +3,13 @@
 
 #include <Arduino.h>
 
+// check data integrity
 bool checkSerialDataIntegrity(u_int8_t* data, int packetSize);
+
+// read serial data
 void readSerialData(void (*handler)(u_int8_t*, int));
+
+// send serial data
 void sendDataOverSerial(u_int8_t* data, int dataSize);
 
 #endif
