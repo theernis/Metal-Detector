@@ -6,39 +6,66 @@ void (*outputFunction)(OUTPUT_FUNCTION_ARGS);
 
 bool* _enabled;
 
-struct ThreadData
+struct Job
 {
-    std::thread* thread;
-    SimulationData* data;
+    Piece* piece = nullptr; // input
+    SimulationData* data = nullptr; // output
 };
 
-ThreadData* threadArray;
-unsigned int threadArraySize;
-unsigned int threadArrayIndex;
+bool working = false;
+
+unsigned int workerThreadCount;
+const unsigned int jobBufferSize = 1024;
+
+std::thread** workerThreads;
+Job** jobBuffers;
+
+std::thread* outputHandler;
 
 // thread function to process output data and free thread data
 void outputThread()
 {
-    for (int i = 0; i < threadArrayIndex; i++)
+    int threadIndex = 0;
+    int jobIndex = 0;
+    while (working || (jobBuffers[threadIndex][jobIndex].piece != nullptr || jobBuffers[threadIndex][jobIndex].data != nullptr))
     {
-        if (threadArray[i].thread->joinable())
+        while (jobBuffers[threadIndex][jobIndex].piece == nullptr || jobBuffers[threadIndex][jobIndex].data == nullptr)
         {
-            threadArray[i].thread->join();
+            // wait
         }
-        outputFunction(threadArray[i].data);
-        delete threadArray[i].thread;
-        delete threadArray[i].data;
+
+        outputFunction(jobBuffers[threadIndex][jobIndex].data);
+
+        delete jobBuffers[threadIndex][jobIndex].piece;
+        jobBuffers[threadIndex][jobIndex].piece = nullptr;
+        delete jobBuffers[threadIndex][jobIndex].data;
+        jobBuffers[threadIndex][jobIndex].data = nullptr;
+
+        threadIndex++;
+        if (threadIndex >= workerThreadCount)
+        {
+            threadIndex = 0;
+            jobIndex++;
+            if (jobIndex >= jobBufferSize)
+            {
+                jobIndex = 0;
+            }
+        }
     }
-    threadArrayIndex = 0;
 
     return;
 }
 
 // worker thread function to process a piece and store the result in the thread data
-void workerThread(Piece piece, SimulationData* data)
+void workerThread(Job* jobBuffer)
 {
-    processPiece(piece, _enabled, data);
-
+    int jobIndex = 0;
+    while (working || jobBuffer[jobIndex].piece != nullptr)
+    {
+        jobBuffer[jobIndex].data = new SimulationData;
+        processPiece(*jobBuffer[jobIndex].piece, _enabled, jobBuffer[jobIndex].data);
+    }
+    
     return;
 }
 
@@ -53,9 +80,20 @@ void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS), bool* enable
     fastCosDeg(0);
     fastTanDeg(0);
 
-    threadArraySize = std::thread::hardware_concurrency();
-    threadArrayIndex = 0;
-    threadArray = new ThreadData[threadArraySize];
+    workerThreadCount = std::thread::hardware_concurrency() - 2;
+    jobBuffers = new Job*[workerThreadCount];
+    for (int i = 0; i < workerThreadCount; i++)
+    {
+        jobBuffers[i] = new Job[jobBufferSize];
+    }
+    working = true;
+    workerThreads = new std::thread*[workerThreadCount];
+    for (int i = 0; i < workerThreadCount; i++)
+    {
+        workerThreads[i] = new std::thread(workerThread, jobBuffers[i]);
+    }
+    
+    outputHandler = new std::thread(outputThread);
 
     return;
 }
@@ -63,14 +101,25 @@ void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS), bool* enable
 // process handling
 void processHandler(Piece piece)
 {
-    if (threadArrayIndex >= threadArraySize)
+    static int threadIndex = 0;
+    static int jobIndex = 0;
+    while (jobBuffers[threadIndex][jobIndex].piece != nullptr || jobBuffers[threadIndex][jobIndex].data != nullptr)
     {
-        outputThread();
+        // wait
     }
-    SimulationData* data = new SimulationData;
-    std::thread* thread = new std::thread(workerThread, piece, data);
-    threadArray[threadArrayIndex] = (ThreadData){thread, data};
-    threadArrayIndex++;
+    Piece* temp = new Piece;
+    *temp = piece;
+    threadIndex++;
+    if (threadIndex >= workerThreadCount)
+    {
+        threadIndex = 0;
+        jobIndex++;
+        if (jobIndex >= jobBufferSize)
+        {
+            jobIndex = 0;
+        }
+    }
+    
     return;
 }
 
@@ -78,7 +127,18 @@ void processHandler(Piece piece)
 void cleanupHandler()
 {
     // clean up
-    outputThread();
-    delete threadArray;
+    outputHandler->join();
+    delete outputHandler;
+    for (int i = 0; i < workerThreadCount; i++)
+    {
+        workerThreads[i]->join();
+        delete workerThreads[i];
+    }
+    delete workerThreads;
+    for (int i = 0; i < workerThreadCount; i++)
+    {
+        delete jobBuffers[i];
+    }
+    delete jobBuffers;
     return;
 }
