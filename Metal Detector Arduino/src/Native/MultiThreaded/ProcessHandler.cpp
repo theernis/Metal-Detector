@@ -1,6 +1,7 @@
 #include "ProcessHandler.h"
 
 #include <thread>
+#include <chrono>
 
 void (*outputFunction)(OUTPUT_FUNCTION_ARGS);
 
@@ -31,7 +32,7 @@ void outputThread()
     {
         while (jobBuffers[threadIndex][jobIndex].piece == nullptr || jobBuffers[threadIndex][jobIndex].data == nullptr)
         {
-            // wait
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
 
         outputFunction(jobBuffers[threadIndex][jobIndex].data);
@@ -62,6 +63,10 @@ void workerThread(Job* jobBuffer)
     int jobIndex = 0;
     while (working || jobBuffer[jobIndex].piece != nullptr)
     {
+        while (jobBuffer[jobIndex].piece == nullptr || jobBuffer[jobIndex].data != nullptr)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
         jobBuffer[jobIndex].data = new SimulationData;
         processPiece(*jobBuffer[jobIndex].piece, _enabled, jobBuffer[jobIndex].data);
     }
@@ -105,7 +110,7 @@ void processHandler(Piece piece)
     static int jobIndex = 0;
     while (jobBuffers[threadIndex][jobIndex].piece != nullptr || jobBuffers[threadIndex][jobIndex].data != nullptr)
     {
-        // wait
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
     Piece* temp = new Piece;
     *temp = piece;
