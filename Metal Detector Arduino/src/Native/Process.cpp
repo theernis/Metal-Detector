@@ -3,7 +3,7 @@
 // processes all pieces in the given piece range and calls the processOutput callback for each piece
 void processPieceRanges(PieceRange pieceRange, bool* enabled, void (*processOutput)(OUTPUT_FUNCTION_ARGS))
 {
-    initializeHandler(processOutput);
+    initializeHandler(processOutput, enabled);
     // initialize lookup tables
     float* speedValues = new float[pieceRange.speed.stepCount + 1];
     float* lengthValues = new float[pieceRange.length.stepCount + 1];
@@ -50,8 +50,7 @@ void processPieceRanges(PieceRange pieceRange, bool* enabled, void (*processOutp
                                 widthValues[width],
                                 angleDeg(angleValues[angle]),
                                 horizontalOffsetValues[horizontalOffset]
-                            },
-                            enabled
+                            }
                         );
                     }
                 }

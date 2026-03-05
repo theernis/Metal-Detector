@@ -4,9 +4,9 @@
 #include "ProcessPiece.h"
 
 // initialize process handling
-void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS));
+void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS), bool* enabled);
 // process handling
-void processHandler(Piece piece, bool* enabled);
+void processHandler(Piece piece);
 // cleanup after process handling
 void cleanupHandler();
 

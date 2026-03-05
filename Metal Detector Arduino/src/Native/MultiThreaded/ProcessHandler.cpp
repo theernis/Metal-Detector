@@ -2,13 +2,9 @@
 
 #include <thread>
 
-//#define PRINT_THREAD_NUMBER
+void (*outputFunction)(OUTPUT_FUNCTION_ARGS);
 
-#ifdef PRINT_THREAD_NUMBER
-int mainThreadCounter = 0;
-int outputThreadCounter = 0;
-int workerThreadCounter = 0;
-#endif
+bool* _enabled;
 
 struct ThreadData
 {
@@ -21,7 +17,7 @@ unsigned int threadArraySize;
 unsigned int threadArrayIndex;
 
 // thread function to process output data and free thread data
-void outputThread(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
+void outputThread()
 {
     for (int i = 0; i < threadArrayIndex; i++)
     {
@@ -29,7 +25,7 @@ void outputThread(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
         {
             threadArray[i].thread->join();
         }
-        processOutput(threadArray[i].data);
+        outputFunction(threadArray[i].data);
         delete threadArray[i].thread;
         delete threadArray[i].data;
     }
@@ -39,28 +35,23 @@ void outputThread(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
 }
 
 // worker thread function to process a piece and store the result in the thread data
-void workerThread(Piece piece, bool* enabled, SimulationData* data)
+void workerThread(Piece piece, SimulationData* data)
 {
-    processPiece(piece, enabled, data);
+    processPiece(piece, _enabled, data);
 
     return;
 }
 
-void (*outputFunction)(OUTPUT_FUNCTION_ARGS);
-
 // initialize process handling
-void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
+void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS), bool* enabled)
 {
+    _enabled = enabled;
     outputFunction = processOutput;
 
     // initialize lookup tables
     fastSinDeg(0);
     fastCosDeg(0);
     fastTanDeg(0);
-
-    #ifdef PRINT_THREAD_NUMBER
-    std::cout << "Main thread number: " << ++mainThreadCounter << std::endl;
-    #endif
 
     threadArraySize = std::thread::hardware_concurrency();
     threadArrayIndex = 0;
@@ -70,18 +61,15 @@ void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
 }
 
 // process handling
-void processHandler(Piece piece, bool* enabled)
+void processHandler(Piece piece)
 {
     if (threadArrayIndex >= threadArraySize)
     {
-        outputThread(outputFunction);
+        outputThread();
     }
     SimulationData* data = new SimulationData;
-    std::thread* thread = new std::thread(workerThread, piece, enabled, data);
+    std::thread* thread = new std::thread(workerThread, piece, data);
     threadArray[threadArrayIndex] = (ThreadData){thread, data};
-    #ifdef PRINT_THREAD_NUMBER
-    std::cout << "Worker thread number: " << ++workerThreadCounter << std::endl;
-    #endif
     threadArrayIndex++;
     return;
 }
@@ -90,7 +78,7 @@ void processHandler(Piece piece, bool* enabled)
 void cleanupHandler()
 {
     // clean up
-    outputThread(outputFunction);
+    outputThread();
     delete threadArray;
     return;
 }
