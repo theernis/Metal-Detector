@@ -1,7 +1,6 @@
 #include "ProcessHandler.h"
 
 #include <thread>
-#include <queue>
 
 //#define PRINT_THREAD_ID
 #define PRINT_THREAD_NUMBER
@@ -18,7 +17,9 @@ struct ThreadData
     SimulationData* data;
 };
 
-std::queue<ThreadData*> threadQueue;
+ThreadData* threadArray;
+unsigned int threadArraySize;
+unsigned int threadArrayIndex;
 
 // thread function to process output data and free thread data
 void outputThread(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
@@ -29,20 +30,20 @@ void outputThread(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
     #ifdef PRINT_THREAD_NUMBER
     std::cout << "Output thread number: " << ++outputThreadCounter << std::endl;
     #endif
-    // process output data
-    while (!threadQueue.empty())
+
+    for (int i = 0; i < threadArrayIndex; i++)
     {
-        ThreadData* threadData = threadQueue.front();
-        threadQueue.pop();
-        if (threadData->thread->joinable())
+        if (threadArray[i].thread->joinable())
         {
-            threadData->thread->join();
+            threadArray[i].thread->join();
         }
-        processOutput(threadData->data);
-        delete threadData->thread;
-        delete threadData->data;
-        delete threadData;
+        processOutput(threadArray[i].data);
+        delete threadArray[i].thread;
+        delete threadArray[i].data;
     }
+    threadArrayIndex = 0;
+
+    return;
 }
 
 // worker thread function to process a piece and store the result in the thread data
@@ -55,11 +56,11 @@ void workerThread(Piece piece, bool* enabled, SimulationData* data)
     std::cout << "Worker thread number: " << ++workerThreadCounter << std::endl;
     #endif
     processPiece(piece, enabled, data);
+
+    return;
 }
 
 void (*outputFunction)(OUTPUT_FUNCTION_ARGS);
-
-int threadCount;
 
 // initialize process handling
 void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
@@ -78,32 +79,34 @@ void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
     std::cout << "Main thread number: " << ++mainThreadCounter << std::endl;
     #endif
 
-    threadCount = std::thread::hardware_concurrency() - 1;
+    threadArraySize = std::thread::hardware_concurrency();
+    threadArrayIndex = 0;
+    threadArray = new ThreadData[threadArraySize];
+
     return;
 }
 
 // process handling
 void processHandler(Piece piece, bool* enabled)
 {
-    // if queue is full, wait for output thread to process some pieces
-    if (threadQueue.size() >= threadCount)
+    if (threadArrayIndex >= threadArraySize)
     {
         std::thread outputThreadHandle(outputThread, outputFunction);
         outputThreadHandle.join();
     }
-    // create new thread
     SimulationData* data = new SimulationData;
     std::thread* thread = new std::thread(workerThread, piece, enabled, data);
-    ThreadData* threadData = new ThreadData{thread, data};
-    threadQueue.push(threadData);
+    threadArray[threadArrayIndex] = (ThreadData){thread, data};
+    threadArrayIndex++;
+    return;
 }
 
 // cleanup after process handling
 void cleanupHandler()
 {
-    // wait for all threads to finish
     std::thread outputThreadHandle(outputThread, outputFunction);
     outputThreadHandle.join();
     // clean up
+    delete threadArray;
     return;
 }
