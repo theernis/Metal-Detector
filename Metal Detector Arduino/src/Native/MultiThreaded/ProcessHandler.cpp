@@ -79,7 +79,6 @@ void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
     std::cout << "Main thread number: " << ++mainThreadCounter << std::endl;
     #endif
 
-    outputThreadHandle = new std::thread(outputThread, outputFunction);
     threadCount = std::thread::hardware_concurrency();
     return;
 }
@@ -90,9 +89,9 @@ void processHandler(Piece piece, bool* enabled)
     // if queue is full, wait for output thread to process some pieces
     if (threadQueue.size() >= threadCount)
     {
+        outputThreadHandle = new std::thread(outputThread, outputFunction);
         outputThreadHandle->join();
         delete outputThreadHandle;
-        outputThreadHandle = new std::thread(outputThread, outputFunction);
     }
     // create new thread
     SimulationData* data = new SimulationData;
@@ -105,6 +104,7 @@ void processHandler(Piece piece, bool* enabled)
 void cleanupHandler()
 {
     // wait for all threads to finish
+    outputThreadHandle = new std::thread(outputThread, outputFunction);
     outputThreadHandle->join();
     // clean up
     delete outputThreadHandle;
