@@ -91,8 +91,7 @@ void processHandler(Piece piece, bool* enabled)
 {
     if (threadArrayIndex >= threadArraySize)
     {
-        std::thread outputThreadHandle(outputThread, outputFunction);
-        outputThreadHandle.join();
+        outputThread(outputFunction);
     }
     SimulationData* data = new SimulationData;
     std::thread* thread = new std::thread(workerThread, piece, enabled, data);
@@ -104,8 +103,7 @@ void processHandler(Piece piece, bool* enabled)
 // cleanup after process handling
 void cleanupHandler()
 {
-    std::thread outputThreadHandle(outputThread, outputFunction);
-    outputThreadHandle.join();
+    outputThread(outputFunction);
     // clean up
     delete threadArray;
     return;
