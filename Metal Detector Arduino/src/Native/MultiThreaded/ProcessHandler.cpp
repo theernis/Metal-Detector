@@ -103,8 +103,8 @@ void processHandler(Piece piece, bool* enabled)
 // cleanup after process handling
 void cleanupHandler()
 {
-    outputThread(outputFunction);
     // clean up
+    outputThread(outputFunction);
     delete threadArray;
     return;
 }
