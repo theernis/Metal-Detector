@@ -4,7 +4,7 @@
 // returns processed data in SimulationData struct
 void processPiece(Piece piece, bool* enabled, SimulationData* data)
 {
-    static MeasureData measureData;
+    MeasureData measureData;
     int sensor_count = 6;
     resetMeasurements(&measureData, sensor_count);
     calculateMeasurementData(&measureData, enabled, piece);

@@ -2,7 +2,7 @@
 
 #include <thread>
 
-#define PRINT_THREAD_NUMBER
+//#define PRINT_THREAD_NUMBER
 
 #ifdef PRINT_THREAD_NUMBER
 int mainThreadCounter = 0;
@@ -23,7 +23,6 @@ unsigned int threadArrayIndex;
 // thread function to process output data and free thread data
 void outputThread(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
 {
-
     for (int i = 0; i < threadArrayIndex; i++)
     {
         if (threadArray[i].thread->joinable())
