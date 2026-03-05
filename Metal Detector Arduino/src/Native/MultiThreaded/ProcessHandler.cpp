@@ -2,7 +2,6 @@
 
 #include <thread>
 
-//#define PRINT_THREAD_ID
 #define PRINT_THREAD_NUMBER
 
 #ifdef PRINT_THREAD_NUMBER
@@ -24,12 +23,6 @@ unsigned int threadArrayIndex;
 // thread function to process output data and free thread data
 void outputThread(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
 {
-    #ifdef PRINT_THREAD_ID
-    std::cout << "Output thread ID: " << std::this_thread::get_id() << std::endl;
-    #endif
-    #ifdef PRINT_THREAD_NUMBER
-    std::cout << "Output thread number: " << ++outputThreadCounter << std::endl;
-    #endif
 
     for (int i = 0; i < threadArrayIndex; i++)
     {
@@ -49,12 +42,6 @@ void outputThread(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
 // worker thread function to process a piece and store the result in the thread data
 void workerThread(Piece piece, bool* enabled, SimulationData* data)
 {
-    #ifdef PRINT_THREAD_ID
-    std::cout << "Worker thread ID: " << std::this_thread::get_id() << std::endl;
-    #endif
-    #ifdef PRINT_THREAD_NUMBER
-    std::cout << "Worker thread number: " << ++workerThreadCounter << std::endl;
-    #endif
     processPiece(piece, enabled, data);
 
     return;
@@ -72,9 +59,6 @@ void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
     fastCosDeg(0);
     fastTanDeg(0);
 
-    #ifdef PRINT_THREAD_ID
-    std::cout << "Main thread ID: " << std::this_thread::get_id() << std::endl;
-    #endif
     #ifdef PRINT_THREAD_NUMBER
     std::cout << "Main thread number: " << ++mainThreadCounter << std::endl;
     #endif
@@ -96,6 +80,9 @@ void processHandler(Piece piece, bool* enabled)
     SimulationData* data = new SimulationData;
     std::thread* thread = new std::thread(workerThread, piece, enabled, data);
     threadArray[threadArrayIndex] = (ThreadData){thread, data};
+    #ifdef PRINT_THREAD_NUMBER
+    std::cout << "Worker thread number: " << ++workerThreadCounter << std::endl;
+    #endif
     threadArrayIndex++;
     return;
 }

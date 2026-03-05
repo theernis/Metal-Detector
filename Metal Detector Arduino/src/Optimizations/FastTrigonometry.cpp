@@ -3,7 +3,8 @@
 #include <iostream>
 
 #define ENABLE_LOOKUP
-#define ENABLE_MISS_COUNT
+// ENABLE_MISS_COUNT must be disable for multithreading
+//#define ENABLE_MISS_COUNT
 
 #ifdef ENABLE_MISS_COUNT
 long long int call = 0;

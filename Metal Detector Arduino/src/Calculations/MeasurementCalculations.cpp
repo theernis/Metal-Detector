@@ -1,8 +1,8 @@
 #include "MeasurementCalculations.h"
 
 
-float distanceBetweenSensorInLine_m = 0.08; // m
-float distanceToFirstSensor_m = 0.4; // m
+const float distanceBetweenSensorInLine_m = 0.08; // m
+const float distanceToFirstSensor_m = 0.4; // m
 
 // calculate speed
 float calculateSpeed_m_per_s(MeasureData data)
