@@ -35,6 +35,7 @@ static std::filesystem::path getFilename()
 
 int main()
 {
+    generateLookupTables();
     void (*outputFunction)(OUTPUT_FUNCTION_ARGS);
     OutputMode outputMode = WRITE;
     switch (outputMode)
@@ -72,6 +73,8 @@ int main()
     }
 
     missCount();
+
+    deleteLookupTables();
     
     return 0;
 }

@@ -11,6 +11,78 @@ long long int call = 0;
 long long int miss = 0;
 #endif
 
+float* sinLookupTable = nullptr;
+float* cosLookupTable = nullptr;
+float* tanLookupTable = nullptr;
+
+void generateSinLookupTable()
+{
+    // create lookup table
+    if (sinLookupTable == nullptr)
+    {
+        sinLookupTable = new float[360];
+        for (int i = 0; i < 360; i++)
+        {
+            sinLookupTable[i] = sinf(RAD(i));
+        }
+    }
+    return;
+}
+
+void generateCosLookupTable()
+{
+    // create lookup table
+    if (cosLookupTable == nullptr)
+    {
+        cosLookupTable = new float[360];
+        for (int i = 0; i < 360; i++)
+        {
+            cosLookupTable[i] = cosf(RAD(i));
+        }
+    }
+    return;
+}
+
+void generateTanLookupTable()
+{
+    // create lookup table
+    if (tanLookupTable == nullptr)
+    {
+        tanLookupTable = new float[180];
+        for (int i = 0; i < 180; i++)
+        {
+            tanLookupTable[i] = tanf(RAD(i));
+        }
+    }
+    return;
+}
+
+// generates lookup tables
+void generateLookupTables()
+{
+    generateSinLookupTable();
+    generateCosLookupTable();
+    generateTanLookupTable();
+    return;
+}
+
+// deletes lookup tables
+void deleteLookupTables()
+{
+    delete[] sinLookupTable;
+    sinLookupTable = nullptr;
+    delete[] cosLookupTable;
+    cosLookupTable = nullptr;
+    delete[] tanLookupTable;
+    tanLookupTable = nullptr;
+    
+    #ifdef ENABLE_MISS_COUNT
+    call = 0;
+    miss = 0;
+    #endif
+    return;
+}
+
 // sine from radians
 float fastSinRad(float rad)
 {
@@ -36,22 +108,17 @@ float fastSinDeg(float deg)
     call++;
     #endif
     #ifdef ENABLE_LOOKUP
-    // create lookup table
-    static float* lookupTable = nullptr;
-    if (lookupTable == nullptr)
+
+    if (sinLookupTable == nullptr)
     {
-        lookupTable = new float[360];
-        for (int i = 0; i < 360; i++)
-        {
-            lookupTable[i] = sinf(RAD(i));
-        }
+        generateSinLookupTable();
     }
 
     // return from lookup table if possible
     // '(float)(int)deg' is a very fast way to check if the number is an integer
     if (deg == (float)(int)deg)
     {
-        return lookupTable[((int)deg)%360 + ((deg < 0) ? 360 : 0)];
+        return sinLookupTable[((int)deg)%360 + ((deg < 0) ? 360 : 0)];
     }
     #endif
     
@@ -69,22 +136,17 @@ float fastCosDeg(float deg)
     call++;
     #endif
     #ifdef ENABLE_LOOKUP
-    // create lookup table
-    static float* lookupTable = nullptr;
-    if (lookupTable == nullptr)
+
+    if (cosLookupTable == nullptr)
     {
-        lookupTable = new float[360];
-        for (int i = 0; i < 360; i++)
-        {
-            lookupTable[i] = cosf(RAD(i));
-        }
+        generateCosLookupTable();
     }
 
     // return from lookup table if possible
     // '(float)(int)deg' is a very fast way to check if the number is an integer
     if (deg == (float)(int)deg)
     {
-        return lookupTable[((int)deg)%360 + ((deg < 0) ? 360 : 0)];
+        return tanLookupTable[((int)deg)%360 + ((deg < 0) ? 360 : 0)];
     }
     #endif
     
@@ -102,22 +164,17 @@ float fastTanDeg(float deg)
     call++;
     #endif
     #ifdef ENABLE_LOOKUP
-    // create lookup table
-    static float* lookupTable = nullptr;
-    if (lookupTable == nullptr)
+
+    if (tanLookupTable == nullptr)
     {
-        lookupTable = new float[180];
-        for (int i = 0; i < 180; i++)
-        {
-            lookupTable[i] = tanf(RAD(i));
-        }
+        generateTanLookupTable();
     }
 
     // return from lookup table if possible
     // '(float)(int)deg' is a very fast way to check if the number
     if (deg == (float)(int)deg)
     {
-        return lookupTable[((int)deg)%180 + ((deg < 0) ? 180 : 0)];
+        return tanLookupTable[((int)deg)%180 + ((deg < 0) ? 180 : 0)];
     }
     #endif
     

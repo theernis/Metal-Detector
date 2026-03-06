@@ -16,6 +16,11 @@
 // did this because I often call the same trigonometric functions with the same values
 // so this speeds up the calculations significantly
 
+// generates lookup tables
+void generateLookupTables();
+// deletes lookup tables
+void deleteLookupTables();
+
 // sine from radians
 float fastSinRad(float rad);
 // cosine from radians
