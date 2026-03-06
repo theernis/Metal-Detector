@@ -2,6 +2,7 @@
 
 #include <thread>
 #include <chrono>
+#include <iostream>
 
 void (*outputFunction)(OUTPUT_FUNCTION_ARGS);
 
@@ -70,6 +71,12 @@ void workerThread(Job* jobBuffer)
         }
         jobBuffer[jobIndex].data = new SimulationData;
         processPiece(*jobBuffer[jobIndex].piece, _enabled, jobBuffer[jobIndex].data);
+
+        jobIndex++;
+        if (jobIndex >= jobBufferSize)
+        {
+            jobIndex = 0;
+        }
     }
     
     return;
