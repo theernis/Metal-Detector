@@ -24,5 +24,7 @@ struct MeasureData
 void resetMeasurements(MeasureData* data, int sensorCount);
 // validates MeasureData struct to confirm enough data is collected
 bool validateMeasurements(MeasureData* data);
+// cleans up MeasureData struct by freeing allocated memory
+void cleanupMeasurements(MeasureData* data);
 
 #endif

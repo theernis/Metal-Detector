@@ -21,6 +21,6 @@ void test(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
         SimulationData data;
         processPiece(pieces[i], enabled, &data);
         processOutput(&data);
+        cleanupMeasurements(&data.measureData);
     }
-    
 }

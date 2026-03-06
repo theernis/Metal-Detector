@@ -39,6 +39,7 @@ void outputThread()
 
         delete jobBuffers[threadIndex][jobIndex].piece;
         jobBuffers[threadIndex][jobIndex].piece = nullptr;
+        cleanupMeasurements(&jobBuffers[threadIndex][jobIndex].data->measureData);
         delete jobBuffers[threadIndex][jobIndex].data;
         jobBuffers[threadIndex][jobIndex].data = nullptr;
 
@@ -79,11 +80,6 @@ void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS), bool* enable
 {
     _enabled = enabled;
     outputFunction = processOutput;
-
-    // initialize lookup tables
-    fastSinDeg(0);
-    fastCosDeg(0);
-    fastTanDeg(0);
 
     workerThreadCount = std::thread::hardware_concurrency() - 2;
     jobBuffers = new Job*[workerThreadCount];
@@ -132,6 +128,7 @@ void processHandler(Piece piece)
 // cleanup after process handling
 void cleanupHandler()
 {
+    working = false;
     // clean up
     outputHandler->join();
     delete outputHandler;
@@ -140,11 +137,11 @@ void cleanupHandler()
         workerThreads[i]->join();
         delete workerThreads[i];
     }
-    delete workerThreads;
+    delete[] workerThreads;
     for (int i = 0; i < workerThreadCount; i++)
     {
-        delete jobBuffers[i];
+        delete[] jobBuffers[i];
     }
-    delete jobBuffers;
+    delete[] jobBuffers;
     return;
 }

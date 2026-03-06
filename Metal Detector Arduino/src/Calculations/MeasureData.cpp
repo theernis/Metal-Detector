@@ -30,3 +30,14 @@ bool validateMeasurements(MeasureData* data)
 
     return (allExited && data->sensorData[3].hasExited && data->sensorData[0].exitTime_s < data->sensorData[3].exitTime_s);
 }
+
+// cleans up MeasureData struct by freeing allocated memory
+void cleanupMeasurements(MeasureData* data)
+{
+    if (data->sensorData != nullptr)
+    {
+        delete[] data->sensorData;
+        data->sensorData = nullptr;
+    }
+    data->count = 0;
+}
