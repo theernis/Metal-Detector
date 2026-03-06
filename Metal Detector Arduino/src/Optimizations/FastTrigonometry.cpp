@@ -146,7 +146,7 @@ float fastCosDeg(float deg)
     // '(float)(int)deg' is a very fast way to check if the number is an integer
     if (deg == (float)(int)deg)
     {
-        return tanLookupTable[((int)deg)%360 + ((deg < 0) ? 360 : 0)];
+        return cosLookupTable[((int)deg)%360 + ((deg < 0) ? 360 : 0)];
     }
     #endif
     
