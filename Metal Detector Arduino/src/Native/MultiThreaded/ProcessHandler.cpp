@@ -2,7 +2,6 @@
 
 #include <thread>
 #include <chrono>
-#include <iostream>
 
 void (*outputFunction)(OUTPUT_FUNCTION_ARGS);
 
