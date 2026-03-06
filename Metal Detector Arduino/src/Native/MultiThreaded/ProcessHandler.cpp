@@ -114,6 +114,7 @@ void processHandler(Piece piece)
     }
     Piece* temp = new Piece;
     *temp = piece;
+    jobBuffers[threadIndex][jobIndex].piece = temp;
     threadIndex++;
     if (threadIndex >= workerThreadCount)
     {

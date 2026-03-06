@@ -29,7 +29,7 @@ void MetalDetectorArray::setSensor(int index, int pin)
 {
     if (index >= 0 && index < _count)
     {
-        if (_sensors[index] == nullptr)
+        if (_sensors[index] != nullptr)
         {
             delete _sensors[index];
         }
