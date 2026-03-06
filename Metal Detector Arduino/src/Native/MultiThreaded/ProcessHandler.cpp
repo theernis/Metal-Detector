@@ -28,7 +28,7 @@ void outputThread()
 {
     int threadIndex = 0;
     int jobIndex = 0;
-    while (working || (jobBuffers[threadIndex][jobIndex].piece != nullptr || jobBuffers[threadIndex][jobIndex].data != nullptr))
+    while (working || jobBuffers[threadIndex][jobIndex].piece != nullptr)
     {
         while (jobBuffers[threadIndex][jobIndex].piece == nullptr || jobBuffers[threadIndex][jobIndex].data == nullptr)
         {
@@ -68,8 +68,9 @@ void workerThread(Job* jobBuffer)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
-        jobBuffer[jobIndex].data = new SimulationData;
-        processPiece(*jobBuffer[jobIndex].piece, _enabled, jobBuffer[jobIndex].data);
+        SimulationData* temp = new SimulationData;
+        processPiece(*jobBuffer[jobIndex].piece, _enabled, temp);
+        jobBuffer[jobIndex].data = temp;
 
         jobIndex++;
         if (jobIndex >= jobBufferSize)
