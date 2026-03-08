@@ -4,16 +4,24 @@
 // resets (or initializes) MeasureData struct
 void resetMeasurements(MeasureData* data, int sensorCount)
 {
-    // set count
-    data->count = sensorCount;
-    // unallocate list
-    if (data->sensorData != nullptr)
+    if (sensorCount != data->count || data->sensorData == nullptr)
     {
-        delete[] data->sensorData;
-        data->sensorData = nullptr;
+        // set count
+        data->count = sensorCount;
+        // unallocate list
+        if (data->sensorData != nullptr)
+        {
+            delete[] data->sensorData;
+            data->sensorData = nullptr;
+        }
+        // allocate list
+        data->sensorData = new SensorData[sensorCount];
     }
-    // allocate list
-    data->sensorData = new SensorData[sensorCount];
+    // initialize list
+    for (int i = 0; i < data->count; i++)
+    {
+        data->sensorData[i] = {NAN, NAN, false, false};
+    }
 }
 
 // validates MeasureData struct to confirm enough data is collected

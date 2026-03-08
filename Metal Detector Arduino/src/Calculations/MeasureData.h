@@ -16,7 +16,7 @@ struct SensorData
 // structure for storing measured data
 struct MeasureData
 {
-    int count;
+    int count = 0;
     SensorData* sensorData = nullptr;
 };
 
