@@ -15,6 +15,11 @@ MetalDetectorArray::MetalDetectorArray(int count)
 // destructor
 MetalDetectorArray::~MetalDetectorArray()
 {
+    for (int i = 0; i < _count; i++)
+    {
+        delete _sensors[i];
+    }
+    
     delete[] _sensors;
 }
 
