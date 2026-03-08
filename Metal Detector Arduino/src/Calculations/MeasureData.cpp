@@ -20,7 +20,10 @@ void resetMeasurements(MeasureData* data, int sensorCount)
     // initialize list
     for (int i = 0; i < data->count; i++)
     {
-        data->sensorData[i] = {NAN, NAN, false, false};
+        data->sensorData[i].enterTime_s = NAN;
+        data->sensorData[i].exitTime_s = NAN;
+        data->sensorData[i].hasEntered = false;
+        data->sensorData[i].hasExited = false;
     }
 }
 

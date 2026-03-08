@@ -18,6 +18,8 @@ void test(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
     for (int i = 0; i < pieceCount; i++)
     {
         SimulationData data;
+        MeasureData tmp;
+        *data.measureData = tmp;
         processPiece(pieces[i], enabled, &data);
         processOutput(&data);
         cleanupMeasurements(data.measureData);

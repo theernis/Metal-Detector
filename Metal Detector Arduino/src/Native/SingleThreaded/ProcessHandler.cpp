@@ -4,11 +4,15 @@ void (*outputFunction)(OUTPUT_FUNCTION_ARGS);
 
 bool* _enabled;
 
+SimulationData data;
+
 // initialize process handling
 void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS), bool* enabled)
 {
     _enabled = enabled;
     outputFunction = processOutput;
+    MeasureData tmp;
+    *data.measureData = tmp;
     return;
 }
 
@@ -16,15 +20,13 @@ void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS), bool* enable
 void processHandler(Piece piece)
 {
     // process piece and call output callback
-    SimulationData data;
     processPiece(piece, _enabled, &data);
     outputFunction(&data);
-    cleanupMeasurements(data.measureData);
 }
 
 // cleanup after process handling
 void cleanupHandler()
 {
-    // no cleanup
+    cleanupMeasurements(data.measureData);
     return;
 }
