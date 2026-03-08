@@ -95,6 +95,7 @@ void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS), bool* enable
         {
             jobBuffers[i][j].piece = new Piece;
             jobBuffers[i][j].data = new SimulationData;
+            jobBuffers[i][j].data->measureData = new MeasureData;
         }
         
     }
@@ -153,8 +154,9 @@ void cleanupHandler()
         for (int j = 0; j < jobBufferSize; j++)
         {
             cleanupMeasurements(jobBuffers[i][j].data->measureData);
-            delete jobBuffers[i][j].piece;
+            delete jobBuffers[i][j].data->measureData;
             delete jobBuffers[i][j].data;
+            delete jobBuffers[i][j].piece;
         }
         
         delete[] jobBuffers[i];
