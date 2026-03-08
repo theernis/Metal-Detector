@@ -17,7 +17,7 @@
 struct SimulationData
 {
     Piece piece;
-    MeasureData measureData;
+    MeasureData* measureData;
     Measurement measurement;
 };
 

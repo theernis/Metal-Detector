@@ -11,6 +11,8 @@ struct Job
 {
     Piece* piece = nullptr; // input
     SimulationData* data = nullptr; // output
+    bool started = false;
+    bool finished = false;
 };
 
 bool working = false;
@@ -28,20 +30,17 @@ void outputThread()
 {
     int threadIndex = 0;
     int jobIndex = 0;
-    while (working || jobBuffers[threadIndex][jobIndex].piece != nullptr)
+    while (working || jobBuffers[threadIndex][jobIndex].started)
     {
-        while (jobBuffers[threadIndex][jobIndex].piece == nullptr || jobBuffers[threadIndex][jobIndex].data == nullptr)
+        while (!jobBuffers[threadIndex][jobIndex].started || !jobBuffers[threadIndex][jobIndex].finished)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
 
         outputFunction(jobBuffers[threadIndex][jobIndex].data);
 
-        delete jobBuffers[threadIndex][jobIndex].piece;
-        jobBuffers[threadIndex][jobIndex].piece = nullptr;
-        cleanupMeasurements(&jobBuffers[threadIndex][jobIndex].data->measureData);
-        delete jobBuffers[threadIndex][jobIndex].data;
-        jobBuffers[threadIndex][jobIndex].data = nullptr;
+        jobBuffers[threadIndex][jobIndex].started = false;
+        jobBuffers[threadIndex][jobIndex].finished = false;
 
         threadIndex++;
         if (threadIndex >= workerThreadCount)
@@ -62,15 +61,14 @@ void outputThread()
 void workerThread(Job* jobBuffer)
 {
     int jobIndex = 0;
-    while (working || jobBuffer[jobIndex].piece != nullptr)
+    while (working || jobBuffer[jobIndex].started)
     {
-        while (jobBuffer[jobIndex].piece == nullptr || jobBuffer[jobIndex].data != nullptr)
+        while (!jobBuffer[jobIndex].started || jobBuffer[jobIndex].finished)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
-        SimulationData* temp = new SimulationData;
-        processPiece(*jobBuffer[jobIndex].piece, _enabled, temp);
-        jobBuffer[jobIndex].data = temp;
+        processPiece(*jobBuffer[jobIndex].piece, _enabled, jobBuffer[jobIndex].data);
+        jobBuffer[jobIndex].finished = true;
 
         jobIndex++;
         if (jobIndex >= jobBufferSize)
@@ -93,6 +91,12 @@ void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS), bool* enable
     for (int i = 0; i < workerThreadCount; i++)
     {
         jobBuffers[i] = new Job[jobBufferSize];
+        for (int j = 0; j < jobBufferSize; j++)
+        {
+            jobBuffers[i][j].piece = new Piece;
+            jobBuffers[i][j].data = new SimulationData;
+        }
+        
     }
     working = true;
     workerThreads = new std::thread*[workerThreadCount];
@@ -111,13 +115,12 @@ void processHandler(Piece piece)
 {
     static int threadIndex = 0;
     static int jobIndex = 0;
-    while (jobBuffers[threadIndex][jobIndex].piece != nullptr || jobBuffers[threadIndex][jobIndex].data != nullptr)
+    while (jobBuffers[threadIndex][jobIndex].started || jobBuffers[threadIndex][jobIndex].finished)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
-    Piece* temp = new Piece;
-    *temp = piece;
-    jobBuffers[threadIndex][jobIndex].piece = temp;
+    *jobBuffers[threadIndex][jobIndex].piece = piece;
+    jobBuffers[threadIndex][jobIndex].started = true;
     threadIndex++;
     if (threadIndex >= workerThreadCount)
     {
@@ -137,16 +140,23 @@ void cleanupHandler()
 {
     working = false;
     // clean up
-    outputHandler->join();
-    delete outputHandler;
     for (int i = 0; i < workerThreadCount; i++)
     {
         workerThreads[i]->join();
         delete workerThreads[i];
     }
+    outputHandler->join();
+    delete outputHandler;
     delete[] workerThreads;
     for (int i = 0; i < workerThreadCount; i++)
     {
+        for (int j = 0; j < jobBufferSize; j++)
+        {
+            cleanupMeasurements(jobBuffers[i][j].data->measureData);
+            delete jobBuffers[i][j].piece;
+            delete jobBuffers[i][j].data;
+        }
+        
         delete[] jobBuffers[i];
     }
     delete[] jobBuffers;

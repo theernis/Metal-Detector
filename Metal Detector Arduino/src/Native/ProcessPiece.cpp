@@ -4,12 +4,11 @@
 // returns processed data in SimulationData struct
 void processPiece(Piece piece, bool* enabled, SimulationData* data)
 {
-    MeasureData measureData;
+    data->piece = piece;
     int sensor_count = 6;
-    resetMeasurements(&measureData, sensor_count);
-    calculateMeasurementData(&measureData, enabled, piece);
-    Measurement measurement = processMeasuredData(measureData);
-    *data = (SimulationData){piece, measureData, measurement};
+    resetMeasurements(data->measureData, sensor_count);
+    calculateMeasurementData(data->measureData, enabled, piece);
+    data->measurement = processMeasuredData(*data->measureData);
 }
 
 // test function to process all pieces from SimulationData and output results
@@ -21,6 +20,6 @@ void test(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
         SimulationData data;
         processPiece(pieces[i], enabled, &data);
         processOutput(&data);
-        cleanupMeasurements(&data.measureData);
+        cleanupMeasurements(data.measureData);
     }
 }

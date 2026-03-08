@@ -19,7 +19,7 @@ void processHandler(Piece piece)
     SimulationData data;
     processPiece(piece, _enabled, &data);
     outputFunction(&data);
-    cleanupMeasurements(&data.measureData);
+    cleanupMeasurements(data.measureData);
 }
 
 // cleanup after process handling
