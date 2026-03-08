@@ -18,8 +18,11 @@ float calculateLength_m(MeasureData data, float speed_m_per_s)
     // find longest time between enter and exit of sensors in line
     for (int i = 1; i < data.count; i++)
     {
-        newTime_s = (data.sensorData[i].exitTime_s - data.sensorData[i].enterTime_s);
-        time_s = maxFloat(time_s, newTime_s);
+        if (data.sensorData[i].hasEntered && data.sensorData[i].hasExited)
+        {
+            newTime_s = (data.sensorData[i].exitTime_s - data.sensorData[i].enterTime_s);
+            time_s = maxFloat(time_s, newTime_s);
+        }
     }
     return time_s * speed_m_per_s;
 }
@@ -48,8 +51,8 @@ float calculateAngle_deg(MeasureData data, float speed_m_per_s)
     int angleCount = 0;
 
     // calculate all the angles in advance
-    float* angles = new float[data.count-2];
-    for (int i = 0; i < data.count - 2; i++)
+    float angles[4];
+    for (int i = 0; i < 4; i++)
     {
         if (data.sensorData[i+1].hasEntered && data.sensorData[i+2].hasEntered)
         {
@@ -66,7 +69,6 @@ float calculateAngle_deg(MeasureData data, float speed_m_per_s)
     // return 0 if only a single sensor is triggered
     if (angleCount <= 0)
     {
-        delete[] angles;
         return 0;
     }
     
@@ -84,7 +86,6 @@ float calculateAngle_deg(MeasureData data, float speed_m_per_s)
             j++;
         }
     }
-    delete[] angles;
 
     // return angle if only one angle was detected
     if (angleCount == 1)
