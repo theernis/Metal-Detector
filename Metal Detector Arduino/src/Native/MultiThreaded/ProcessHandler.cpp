@@ -2,17 +2,19 @@
 
 #include <thread>
 #include <chrono>
+#include <iostream>
 
 void (*outputFunction)(OUTPUT_FUNCTION_ARGS);
 
 bool* _enabled;
 
+enum HandlerThread {MAIN, WORKER, OUTPUT};
+
 struct Job
 {
     Piece* piece = nullptr; // input
     SimulationData* data = nullptr; // output
-    bool started = false;
-    bool finished = false;
+    HandlerThread handler = MAIN;
 };
 
 bool working = false;
@@ -30,17 +32,20 @@ void outputThread()
 {
     int threadIndex = 0;
     int jobIndex = 0;
-    while (working || jobBuffers[threadIndex][jobIndex].started)
+    while (working || jobBuffers[threadIndex][jobIndex].handler != MAIN)
     {
-        while (!jobBuffers[threadIndex][jobIndex].started || !jobBuffers[threadIndex][jobIndex].finished)
+        while (jobBuffers[threadIndex][jobIndex].handler != OUTPUT)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            if (!working)
+            {
+                return;
+            }
         }
 
         outputFunction(jobBuffers[threadIndex][jobIndex].data);
 
-        jobBuffers[threadIndex][jobIndex].started = false;
-        jobBuffers[threadIndex][jobIndex].finished = false;
+        jobBuffers[threadIndex][jobIndex].handler = MAIN;
 
         threadIndex++;
         if (threadIndex >= workerThreadCount)
@@ -61,14 +66,19 @@ void outputThread()
 void workerThread(Job* jobBuffer)
 {
     int jobIndex = 0;
-    while (working || jobBuffer[jobIndex].started)
+    while (working || jobBuffer[jobIndex].handler == WORKER)
     {
-        while (!jobBuffer[jobIndex].started || jobBuffer[jobIndex].finished)
+        while (jobBuffer[jobIndex].handler != WORKER)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            if (!working)
+            {
+                return;
+            }
+            
         }
         processPiece(*jobBuffer[jobIndex].piece, _enabled, jobBuffer[jobIndex].data);
-        jobBuffer[jobIndex].finished = true;
+        jobBuffer[jobIndex].handler = OUTPUT;
 
         jobIndex++;
         if (jobIndex >= jobBufferSize)
@@ -116,12 +126,12 @@ void processHandler(Piece piece)
 {
     static int threadIndex = 0;
     static int jobIndex = 0;
-    while (jobBuffers[threadIndex][jobIndex].started || jobBuffers[threadIndex][jobIndex].finished)
+    while (jobBuffers[threadIndex][jobIndex].handler != MAIN)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
     *jobBuffers[threadIndex][jobIndex].piece = piece;
-    jobBuffers[threadIndex][jobIndex].started = true;
+    jobBuffers[threadIndex][jobIndex].handler = WORKER;
     threadIndex++;
     if (threadIndex >= workerThreadCount)
     {
