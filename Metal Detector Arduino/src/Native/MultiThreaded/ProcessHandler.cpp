@@ -37,7 +37,7 @@ void outputThread()
         while (jobBuffers[threadIndex][jobIndex].handler != OUTPUT)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
-            if (!working)
+            if (!working && jobBuffers[threadIndex][jobIndex].handler == MAIN)
             {
                 return;
             }
