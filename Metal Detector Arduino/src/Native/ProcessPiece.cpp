@@ -1,4 +1,5 @@
 #include "ProcessPiece.h"
+#include <iostream>
 
 // process piece data and calculate measurements
 // returns processed data in SimulationData struct
@@ -15,13 +16,14 @@ void processPiece(Piece piece, bool* enabled, SimulationData* data)
 void test(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
 {
     bool enabled[] = {true, true, true, true, true, true};
+    SimulationData data;
+    data.measureData = new MeasureData;
+    data.measureData->sensorData = nullptr;
     for (int i = 0; i < pieceCount; i++)
     {
-        SimulationData data;
-        MeasureData tmp;
-        *data.measureData = tmp;
         processPiece(pieces[i], enabled, &data);
         processOutput(&data);
-        cleanupMeasurements(data.measureData);
     }
+    cleanupMeasurements(data.measureData);
+    delete data.measureData;
 }

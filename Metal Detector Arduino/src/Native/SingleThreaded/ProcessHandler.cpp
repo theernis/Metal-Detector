@@ -11,8 +11,7 @@ void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS), bool* enable
 {
     _enabled = enabled;
     outputFunction = processOutput;
-    MeasureData tmp;
-    *data.measureData = tmp;
+    data.measureData = new MeasureData;
     return;
 }
 
@@ -28,5 +27,6 @@ void processHandler(Piece piece)
 void cleanupHandler()
 {
     cleanupMeasurements(data.measureData);
+    delete data.measureData;
     return;
 }
