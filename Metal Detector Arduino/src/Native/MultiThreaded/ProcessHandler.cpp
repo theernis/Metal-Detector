@@ -18,7 +18,7 @@ struct Job
 bool working = false;
 
 unsigned int workerThreadCount;
-const unsigned int jobBufferSize = 65536;
+const unsigned int jobBufferSize = 1 << 16;
 
 std::thread** workerThreads;
 Job** jobBuffers;

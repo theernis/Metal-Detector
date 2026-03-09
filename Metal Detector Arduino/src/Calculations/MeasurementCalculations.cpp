@@ -74,7 +74,7 @@ float calculateAngle_deg(MeasureData data, float speed_m_per_s)
     
 
     // testing 3 different angle ranges
-    Angles* angleRanges = new Angles[angleCount];
+    Angles angleRanges[4];
     Angles sum = {0, 0, 0};
     for (int i = 0, j = 0; i < data.count - 2; i++)
     {
@@ -90,7 +90,6 @@ float calculateAngle_deg(MeasureData data, float speed_m_per_s)
     // return angle if only one angle was detected
     if (angleCount == 1)
     {
-        delete[] angleRanges;
         return sum.middle_deg;
     }
 
@@ -100,7 +99,6 @@ float calculateAngle_deg(MeasureData data, float speed_m_per_s)
         // choose the one closer to 0
         float angle1 = angleRanges[0].middle_deg;
         float angle2 = angleRanges[1].middle_deg;
-        delete[] angleRanges;
         if (absFloat(angle1) < absFloat(angle2))
         {
             return angle1;
@@ -180,7 +178,6 @@ float calculateAngle_deg(MeasureData data, float speed_m_per_s)
         averageAngle += 90;
     }
     
-    delete[] angleRanges;
     return averageAngle;
     // I give up this is the 5th concept of angle calculations I tried this night
     // this one at least gets 8/10 right when testing 0-45 degrees in 5 degree intervals

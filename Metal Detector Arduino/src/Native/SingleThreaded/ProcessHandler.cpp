@@ -18,7 +18,7 @@ void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS), bool* enable
 // process handling
 void processHandler(Piece piece)
 {
-    // process piece and call output callback]
+    // process piece and call output callback
     data.piece = piece;
     processPiece(_enabled, &data);
     outputFunction(&data);
