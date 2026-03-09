@@ -34,27 +34,25 @@ void outputThread()
     int jobIndex = 0;
     while (working || jobBuffers[threadIndex][jobIndex].handler != MAIN)
     {
-        while (jobBuffers[threadIndex][jobIndex].handler != OUTPUT)
+        if (jobBuffers[threadIndex][jobIndex].handler != OUTPUT)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
-            if (!working && jobBuffers[threadIndex][jobIndex].handler == MAIN)
-            {
-                return;
-            }
         }
-
-        outputFunction(jobBuffers[threadIndex][jobIndex].data);
-
-        jobBuffers[threadIndex][jobIndex].handler = MAIN;
-
-        threadIndex++;
-        if (threadIndex >= workerThreadCount)
+        else
         {
-            threadIndex = 0;
-            jobIndex++;
-            if (jobIndex >= jobBufferSize)
+            outputFunction(jobBuffers[threadIndex][jobIndex].data);
+
+            jobBuffers[threadIndex][jobIndex].handler = MAIN;
+
+            threadIndex++;
+            if (threadIndex >= workerThreadCount)
             {
-                jobIndex = 0;
+                threadIndex = 0;
+                jobIndex++;
+                if (jobIndex >= jobBufferSize)
+                {
+                    jobIndex = 0;
+                }
             }
         }
     }
@@ -68,7 +66,7 @@ void workerThread(Job* jobBuffer)
     int jobIndex = 0;
     while (working || jobBuffer[jobIndex].handler == WORKER)
     {
-        while (jobBuffer[jobIndex].handler != WORKER)
+        if (jobBuffer[jobIndex].handler != WORKER)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
             if (!working)
@@ -77,13 +75,16 @@ void workerThread(Job* jobBuffer)
             }
             
         }
-        processPiece(*jobBuffer[jobIndex].piece, _enabled, jobBuffer[jobIndex].data);
-        jobBuffer[jobIndex].handler = OUTPUT;
-
-        jobIndex++;
-        if (jobIndex >= jobBufferSize)
+        else
         {
-            jobIndex = 0;
+            processPiece(*jobBuffer[jobIndex].piece, _enabled, jobBuffer[jobIndex].data);
+            jobBuffer[jobIndex].handler = OUTPUT;
+
+            jobIndex++;
+            if (jobIndex >= jobBufferSize)
+            {
+                jobIndex = 0;
+            }
         }
     }
     
