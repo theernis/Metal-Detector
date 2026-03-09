@@ -25,7 +25,7 @@ Job** jobBuffers;
 
 std::thread* outputHandler;
 
-// thread function to process output data and free thread data
+// thread function to process output data
 void outputThread()
 {
     int threadIndex = 0;
