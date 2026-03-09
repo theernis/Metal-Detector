@@ -2,7 +2,6 @@
 
 #include <thread>
 #include <chrono>
-#include <iostream>
 
 void (*outputFunction)(OUTPUT_FUNCTION_ARGS);
 
@@ -69,11 +68,6 @@ void workerThread(Job* jobBuffer)
         if (jobBuffer[jobIndex].handler != WORKER)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
-            if (!working)
-            {
-                return;
-            }
-            
         }
         else
         {
