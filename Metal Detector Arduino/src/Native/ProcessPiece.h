@@ -9,7 +9,7 @@
 
 // process piece data and calculate measurements
 // returns processed data in SimulationData struct
-void processPiece(Piece piece, bool* enabled, SimulationData* data);
+void processPiece(bool* enabled, SimulationData* data);
 
 // test function to process all pieces from SimulationData and output results
 void test(void (*processOutput)(OUTPUT_FUNCTION_ARGS));

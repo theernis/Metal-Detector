@@ -11,8 +11,7 @@ enum HandlerThread {MAIN, WORKER, OUTPUT};
 
 struct Job
 {
-    Piece* piece = nullptr; // input
-    SimulationData* data = nullptr; // output
+    SimulationData* data = nullptr;
     HandlerThread handler = MAIN;
 };
 
@@ -71,7 +70,7 @@ void workerThread(Job* jobBuffer)
         }
         else
         {
-            processPiece(*jobBuffer[jobIndex].piece, _enabled, jobBuffer[jobIndex].data);
+            processPiece(_enabled, jobBuffer[jobIndex].data);
             jobBuffer[jobIndex].handler = OUTPUT;
 
             jobIndex++;
@@ -98,7 +97,6 @@ void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS), bool* enable
         jobBuffers[i] = new Job[jobBufferSize];
         for (int j = 0; j < jobBufferSize; j++)
         {
-            jobBuffers[i][j].piece = new Piece;
             jobBuffers[i][j].data = new SimulationData;
             jobBuffers[i][j].data->measureData = new MeasureData;
         }
@@ -125,7 +123,7 @@ void processHandler(Piece piece)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
-    *jobBuffers[threadIndex][jobIndex].piece = piece;
+    jobBuffers[threadIndex][jobIndex].data->piece = piece;
     jobBuffers[threadIndex][jobIndex].handler = WORKER;
     threadIndex++;
     if (threadIndex >= workerThreadCount)
@@ -161,7 +159,6 @@ void cleanupHandler()
             cleanupMeasurements(jobBuffers[i][j].data->measureData);
             delete jobBuffers[i][j].data->measureData;
             delete jobBuffers[i][j].data;
-            delete jobBuffers[i][j].piece;
         }
         
         delete[] jobBuffers[i];
