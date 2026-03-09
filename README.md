@@ -19,5 +19,3 @@ this project contains 5 different builds:
 5. Native_MultiThreaded_SIMULATION_DATA  
 * runs natively on the computer
 * generates output file on the users Desktop
-* works but is multiple times slower than singlethreaded
-* currently gets stuck close to the end
