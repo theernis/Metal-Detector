@@ -20,3 +20,4 @@ this project contains 5 different builds:
 * runs natively on the computer
 * generates output file on the users Desktop
 * works but is multiple times slower than singlethreaded
+* currently gets stuck close to the end
