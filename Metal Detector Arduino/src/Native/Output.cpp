@@ -158,11 +158,11 @@ void writePieceToFile(Piece* piece)
     {
         return;
     }
-    outputFile.write(reinterpret_cast<const char*>(&piece->speed_m_per_s), sizeof(piece->speed_m_per_s));
-    outputFile.write(reinterpret_cast<const char*>(&piece->length_m), sizeof(piece->length_m));
-    outputFile.write(reinterpret_cast<const char*>(&piece->width_m), sizeof(piece->width_m));
-    outputFile.write(reinterpret_cast<const char*>(&piece->angle.angle_deg), sizeof(piece->angle.angle_deg));
-    outputFile.write(reinterpret_cast<const char*>(&piece->horizontalOffset_m), sizeof(piece->horizontalOffset_m));
+    outputFile.write(reinterpret_cast<const char*>(&piece->speed_m_per_s), sizeof(float));
+    outputFile.write(reinterpret_cast<const char*>(&piece->length_m), sizeof(float));
+    outputFile.write(reinterpret_cast<const char*>(&piece->width_m), sizeof(float));
+    outputFile.write(reinterpret_cast<const char*>(&piece->angle.angle_deg), sizeof(float));
+    outputFile.write(reinterpret_cast<const char*>(&piece->horizontalOffset_m), sizeof(float));
 }
 
 // write output to file (for data collection)
@@ -170,20 +170,20 @@ void writeMeasureDataToFile(MeasureData* data)
 {
     for (int i = 0; i < 6; ++i)
     {
-        outputFile.write(reinterpret_cast<const char*>(&data->sensorData[i].enterTime_s), sizeof(data->sensorData[i].enterTime_s));
-        outputFile.write(reinterpret_cast<const char*>(&data->sensorData[i].exitTime_s), sizeof(data->sensorData[i].exitTime_s));
-        outputFile.write(reinterpret_cast<const char*>(&data->sensorData[i].hasEntered), sizeof(data->sensorData[i].hasEntered));
-        outputFile.write(reinterpret_cast<const char*>(&data->sensorData[i].hasExited), sizeof(data->sensorData[i].hasExited));
+        outputFile.write(reinterpret_cast<const char*>(&data->sensorData[i].enterTime_s), sizeof(float));
+        outputFile.write(reinterpret_cast<const char*>(&data->sensorData[i].exitTime_s), sizeof(float));
+        outputFile.write(reinterpret_cast<const char*>(&data->sensorData[i].hasEntered), sizeof(bool));
+        outputFile.write(reinterpret_cast<const char*>(&data->sensorData[i].hasExited), sizeof(bool));
     }
 }
 
 // write output to file (for data collection)
 void writeMeasurementToFile(Measurement* measurement)
 {
-    outputFile.write(reinterpret_cast<const char*>(&measurement->speed_m_per_s), sizeof(measurement->speed_m_per_s));
-    outputFile.write(reinterpret_cast<const char*>(&measurement->length_m), sizeof(measurement->length_m));
-    outputFile.write(reinterpret_cast<const char*>(&measurement->width_m), sizeof(measurement->width_m));
-    outputFile.write(reinterpret_cast<const char*>(&measurement->angle_deg), sizeof(measurement->angle_deg));
+    outputFile.write(reinterpret_cast<const char*>(&measurement->speed_m_per_s), sizeof(float));
+    outputFile.write(reinterpret_cast<const char*>(&measurement->length_m), sizeof(float));
+    outputFile.write(reinterpret_cast<const char*>(&measurement->width_m), sizeof(float));
+    outputFile.write(reinterpret_cast<const char*>(&measurement->angle_deg), sizeof(float));
 }
 
 // write output to file (for data collection)
