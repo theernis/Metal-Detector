@@ -3,6 +3,11 @@
 #include <thread>
 #include <chrono>
 
+//#define WAITING_DISPLAY
+#ifdef WAITING_DISPLAY
+#include <iostream>
+#endif
+
 void (*outputFunction)(OUTPUT_FUNCTION_ARGS);
 
 bool* _enabled;
@@ -34,6 +39,9 @@ void outputThread()
     {
         if (jobBuffers[threadIndex][jobIndex].handler != OUTPUT)
         {
+            #ifdef WAITING_DISPLAY
+            std::cout << "output thread waiting\n";
+            #endif
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
         else
@@ -66,6 +74,9 @@ void workerThread(Job* jobBuffer)
     {
         if (jobBuffer[jobIndex].handler != WORKER)
         {
+            #ifdef WAITING_DISPLAY
+            std::cout << "worker thread waiting\n";
+            #endif
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
         else
@@ -121,6 +132,9 @@ void processHandler(Piece piece)
     static int jobIndex = 0;
     while (jobBuffers[threadIndex][jobIndex].handler != MAIN)
     {
+        #ifdef WAITING_DISPLAY
+        std::cout << "main thread waiting\n";
+        #endif
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
     jobBuffers[threadIndex][jobIndex].data->piece = piece;
