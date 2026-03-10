@@ -154,10 +154,6 @@ void closeOutputFile()
 // write output to file (for data collection)
 void writePieceToFile(Piece* piece)
 {
-    if (!outputFile.is_open())
-    {
-        return;
-    }
     outputFile.write(reinterpret_cast<const char*>(&piece->speed_m_per_s), sizeof(float));
     outputFile.write(reinterpret_cast<const char*>(&piece->length_m), sizeof(float));
     outputFile.write(reinterpret_cast<const char*>(&piece->width_m), sizeof(float));
@@ -189,6 +185,10 @@ void writeMeasurementToFile(Measurement* measurement)
 // write output to file (for data collection)
 void writeOutputToFile(SimulationData* data)
 {
+    if (!outputFile.is_open())
+    {
+        return;
+    }
     #ifdef OUTPUT_PIECE
     writePieceToFile(&data->piece);
     #endif
