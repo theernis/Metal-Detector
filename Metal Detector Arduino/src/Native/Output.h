@@ -16,9 +16,9 @@
 // structure for output data
 struct SimulationData
 {
-    Piece piece;
+    Piece* piece;
     MeasureData* measureData;
-    Measurement measurement;
+    Measurement* measurement;
 };
 
 // ignore output (for performance testing)

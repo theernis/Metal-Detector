@@ -109,7 +109,9 @@ void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS), bool* enable
         for (int j = 0; j < jobBufferSize; j++)
         {
             jobBuffers[i][j].data = new SimulationData;
+            jobBuffers[i][j].data->piece = new Piece;
             jobBuffers[i][j].data->measureData = new MeasureData;
+            jobBuffers[i][j].data->measurement = new Measurement;
         }
         
     }
@@ -137,7 +139,7 @@ void processHandler(Piece piece)
         #endif
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
-    jobBuffers[threadIndex][jobIndex].data->piece = piece;
+    *jobBuffers[threadIndex][jobIndex].data->piece = piece;
     jobBuffers[threadIndex][jobIndex].handler = WORKER;
     threadIndex++;
     if (threadIndex >= workerThreadCount)
@@ -171,7 +173,9 @@ void cleanupHandler()
         for (int j = 0; j < jobBufferSize; j++)
         {
             cleanupMeasurements(jobBuffers[i][j].data->measureData);
+            delete jobBuffers[i][j].data->piece;
             delete jobBuffers[i][j].data->measureData;
+            delete jobBuffers[i][j].data->measurement;
             delete jobBuffers[i][j].data;
         }
         

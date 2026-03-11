@@ -11,7 +11,9 @@ void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS), bool* enable
 {
     _enabled = enabled;
     outputFunction = processOutput;
+    data.piece = new Piece;
     data.measureData = new MeasureData;
+    data.measurement = new Measurement;
     return;
 }
 
@@ -19,7 +21,7 @@ void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS), bool* enable
 void processHandler(Piece piece)
 {
     // process piece and call output callback
-    data.piece = piece;
+    *data.piece = piece;
     processPiece(_enabled, &data);
     outputFunction(&data);
 }
@@ -28,6 +30,8 @@ void processHandler(Piece piece)
 void cleanupHandler()
 {
     cleanupMeasurements(data.measureData);
+    delete data.piece;
     delete data.measureData;
+    delete data.measurement;
     return;
 }

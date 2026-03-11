@@ -82,7 +82,7 @@ void printMeasurement(Measurement* measurement)
 void printOutput(SimulationData* data)
 {
     #ifdef OUTPUT_PIECE
-    printPiece(&data->piece);
+    printPiece(data->piece);
     #endif
     #ifdef OUTPUT_MEASURE_DATA
     printMeasureData(data->measureData);
@@ -90,7 +90,7 @@ void printOutput(SimulationData* data)
     #ifdef OUTPUT_MEASUREMENT
     if (validateMeasurements(data->measureData))
     {
-        printMeasurement(&data->measurement);
+        printMeasurement(data->measurement);
     }
     else
     {
@@ -225,12 +225,12 @@ void writeOutputToFile(SimulationData* data)
         return;
     }
     #ifdef OUTPUT_PIECE
-    writePieceToFile(&data->piece);
+    writePieceToFile(data->piece);
     #endif
     #ifdef OUTPUT_MEASURE_DATA
     writeMeasureDataToFile(data->measureData);
     #endif
     #ifdef OUTPUT_MEASUREMENT
-    writeMeasurementToFile(&data->measurement);
+    writeMeasurementToFile(data->measurement);
     #endif
 }
