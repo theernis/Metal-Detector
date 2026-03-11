@@ -21,6 +21,8 @@ struct SimulationData
     Measurement* measurement;
 };
 
+// set desired outputs
+void setOutputs(bool printPiece, bool printMeasureData, bool printMeasurement);
 // ignore output (for performance testing)
 void ignoreOutput(SimulationData* data);
 // print output to console (for debugging)

@@ -38,6 +38,7 @@ int main()
     generateLookupTables();
     void (*outputFunction)(OUTPUT_FUNCTION_ARGS);
     OutputMode outputMode = WRITE;
+    setOutputs(true, false, true);
     switch (outputMode)
     {
     case IGNORE:
