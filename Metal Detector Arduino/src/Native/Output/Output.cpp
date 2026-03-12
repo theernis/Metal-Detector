@@ -70,10 +70,10 @@ void printMeasureData(MeasureData* data)
     for (int i = 0; i < 6; i++)
     {
         std::cout << "sensor i: " << i << std::endl;
-        std::cout << "enter time: " << data->sensorData[i].enterTime_s << std::endl;
-        std::cout << "exit time: " << data->sensorData[i].exitTime_s << std::endl;
-        std::cout << "has entered: " << data->sensorData[i].hasEntered << std::endl;
-        std::cout << "has exited: " << data->sensorData[i].hasExited << std::endl;
+        std::cout << "enter time: " << data->sensorData[i]->enterTime_s << std::endl;
+        std::cout << "exit time: " << data->sensorData[i]->exitTime_s << std::endl;
+        std::cout << "has entered: " << data->sensorData[i]->hasEntered << std::endl;
+        std::cout << "has exited: " << data->sensorData[i]->hasExited << std::endl;
     }
 }
 
@@ -215,10 +215,10 @@ void writeMeasureDataToFile(MeasureData* data)
 {
     for (int i = 0; i < 6; ++i)
     {
-        writeFloat(data->sensorData[i].enterTime_s);
-        writeFloat(data->sensorData[i].exitTime_s);
-        writeBool(data->sensorData[i].hasEntered);
-        writeBool(data->sensorData[i].hasExited);
+        writeFloat(data->sensorData[i]->enterTime_s);
+        writeFloat(data->sensorData[i]->exitTime_s);
+        writeBool(data->sensorData[i]->hasEntered);
+        writeBool(data->sensorData[i]->hasExited);
     }
 }
 

@@ -73,7 +73,7 @@ void calculateMeasurementData(MeasureData* data, bool* enabled, Piece piece)
     {
         if (enabled[i] == true)
         {
-            calculateSensorData(&(data->sensorData[i]), i, &piece);
+            calculateSensorData(data->sensorData[i], i, &piece);
         }
     }
 }

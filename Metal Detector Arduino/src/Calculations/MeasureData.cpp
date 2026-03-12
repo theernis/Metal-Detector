@@ -11,19 +11,32 @@ void resetMeasurements(MeasureData* data, int sensorCount)
         // unallocate list
         if (data->sensorData != nullptr)
         {
+            if (*data->sensorData != nullptr)
+            {
+                delete *data->sensorData;
+            }
             delete[] data->sensorData;
             data->sensorData = nullptr;
         }
         // allocate list
-        data->sensorData = new SensorData[sensorCount];
+        data->sensorData = new SensorData*[sensorCount];
+        for (int i = 0; i < sensorCount; i++)
+        {
+            data->sensorData[i] = nullptr;
+        }
+        
     }
     // initialize list
     for (int i = 0; i < data->count; i++)
     {
-        data->sensorData[i].enterTime_s = NAN;
-        data->sensorData[i].exitTime_s = NAN;
-        data->sensorData[i].hasEntered = false;
-        data->sensorData[i].hasExited = false;
+        if (data->sensorData[i] == nullptr)
+        {
+            data->sensorData[i] = new SensorData;
+        }
+        data->sensorData[i]->enterTime_s = NAN;
+        data->sensorData[i]->exitTime_s = NAN;
+        data->sensorData[i]->hasEntered = false;
+        data->sensorData[i]->hasExited = false;
     }
 }
 
@@ -33,13 +46,13 @@ bool validateMeasurements(MeasureData* data)
     bool allExited = true;
     for (int i = 0; i < data->count; i++)
     {
-        if (data->sensorData[i].hasEntered != data->sensorData[i].hasExited)
+        if (data->sensorData[i]->hasEntered != data->sensorData[i]->hasExited)
         {
             allExited = false;
         }
     }
 
-    return (allExited && data->sensorData[3].hasExited && data->sensorData[0].exitTime_s < data->sensorData[3].exitTime_s);
+    return (allExited && data->sensorData[3]->hasExited && data->sensorData[0]->exitTime_s < data->sensorData[3]->exitTime_s);
 }
 
 // cleans up MeasureData struct by freeing allocated memory
@@ -47,6 +60,10 @@ void cleanupMeasurements(MeasureData* data)
 {
     if (data->sensorData != nullptr)
     {
+        if (*data->sensorData != nullptr)
+        {
+            delete *data->sensorData;
+        }
         delete[] data->sensorData;
         data->sensorData = nullptr;
     }

@@ -6,7 +6,7 @@
 
 #include "Process.h"
 
-//#define TEST
+#define TEST
 
 enum OutputMode
 {
@@ -37,7 +37,7 @@ int main()
 {
     generateLookupTables();
     void (*outputFunction)(OUTPUT_FUNCTION_ARGS);
-    OutputMode outputMode = WRITE;
+    OutputMode outputMode = PRINT;
     setOutputs(true, false, true);
     switch (outputMode)
     {

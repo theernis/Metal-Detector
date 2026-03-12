@@ -7,7 +7,7 @@ const float distanceToFirstSensor_m = 0.4; // m
 // calculate speed
 float calculateSpeed_m_per_s(MeasureData data)
 {
-    return distanceToFirstSensor_m / (data.sensorData[3].exitTime_s - data.sensorData[0].exitTime_s);
+    return distanceToFirstSensor_m / (data.sensorData[3]->exitTime_s - data.sensorData[0]->exitTime_s);
 }
 
 // calculate length
@@ -18,9 +18,9 @@ float calculateLength_m(MeasureData data, float speed_m_per_s)
     // find longest time between enter and exit of sensors in line
     for (int i = 1; i < data.count; i++)
     {
-        if (data.sensorData[i].hasEntered && data.sensorData[i].hasExited)
+        if (data.sensorData[i]->hasEntered && data.sensorData[i]->hasExited)
         {
-            newTime_s = (data.sensorData[i].exitTime_s - data.sensorData[i].enterTime_s);
+            newTime_s = (data.sensorData[i]->exitTime_s - data.sensorData[i]->enterTime_s);
             time_s = maxFloat(time_s, newTime_s);
         }
     }
@@ -33,7 +33,7 @@ float calculateWidth_m(MeasureData data)
     int countwidth = 0;
     for (int i = 1; i < data.count; i++)
     {
-        countwidth += (int)(bool)(data.sensorData[i].hasEntered && data.sensorData[i].hasExited);
+        countwidth += (int)(bool)(data.sensorData[i]->hasEntered && data.sensorData[i]->hasExited);
     }
     return countwidth * distanceBetweenSensorInLine_m;
 }
@@ -54,10 +54,10 @@ float calculateAngle_deg(MeasureData data, float speed_m_per_s)
     float angles[4];
     for (int i = 0; i < 4; i++)
     {
-        if (data.sensorData[i+1].hasEntered && data.sensorData[i+2].hasEntered)
+        if (data.sensorData[i+1]->hasEntered && data.sensorData[i+2]->hasEntered)
         {
             // angle between two neigboring sensors
-            angles[i] = DEG(atanf(((data.sensorData[i+2].enterTime_s - data.sensorData[i+1].enterTime_s) * speed_m_per_s) / distanceBetweenSensorInLine_m));
+            angles[i] = DEG(atanf(((data.sensorData[i+2]->enterTime_s - data.sensorData[i+1]->enterTime_s) * speed_m_per_s) / distanceBetweenSensorInLine_m));
             angleCount++;
         }
         else
@@ -218,7 +218,7 @@ void adjustOnAngle(Measurement* result, MeasureData data)
     int mostRightIndex = -1;
     for (int i = 1; i < data.count; i++)
     {
-        if (data.sensorData[i].hasEntered)
+        if (data.sensorData[i]->hasEntered)
         {
             if (mostLeftIndex == -1)
             {
@@ -228,8 +228,8 @@ void adjustOnAngle(Measurement* result, MeasureData data)
         }
     }
     float d = ((mostRightIndex - mostLeftIndex) * distanceBetweenSensorInLine_m); // distance between most left and most right sensors
-    float x1 = (data.sensorData[mostLeftIndex].exitTime_s - data.sensorData[mostLeftIndex].enterTime_s) * (*result).speed_m_per_s; // length measured by most left sensor
-    float x2 = (data.sensorData[mostRightIndex].exitTime_s - data.sensorData[mostRightIndex].enterTime_s) * (*result).speed_m_per_s; // length measured by most right sensor
+    float x1 = (data.sensorData[mostLeftIndex]->exitTime_s - data.sensorData[mostLeftIndex]->enterTime_s) * (*result).speed_m_per_s; // length measured by most left sensor
+    float x2 = (data.sensorData[mostRightIndex]->exitTime_s - data.sensorData[mostRightIndex]->enterTime_s) * (*result).speed_m_per_s; // length measured by most right sensor
     newWidth = d/fastCosDeg(angle) + (x1 + x2 - (*result).length_m) * fastSinDeg(angle);
     newWidth = absFloat(newWidth);
 

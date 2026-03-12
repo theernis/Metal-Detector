@@ -17,7 +17,7 @@ struct SensorData
 struct MeasureData
 {
     int count = 0;
-    SensorData* sensorData = nullptr;
+    SensorData** sensorData = nullptr;
 };
 
 // resets (or initializes) MeasureData struct
