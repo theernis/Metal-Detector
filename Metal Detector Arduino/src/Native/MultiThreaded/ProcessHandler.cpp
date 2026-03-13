@@ -104,12 +104,12 @@ void initializeOutputs(bool printPiece, bool printMeasureData, bool printMeasure
     _printPiece = printPiece;
     _printMeasureData = printMeasureData;
     _printMeasurement = printMeasurement;
+    setOutputs(_printPiece, _printMeasureData, _printMeasurement);
 }
 
 // initialize process handling
 void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS), bool* enabled)
 {
-    setOutputs(_printPiece, _printMeasureData, _printMeasurement);
     _enabled = enabled;
     outputFunction = processOutput;
 
