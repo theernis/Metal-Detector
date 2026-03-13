@@ -64,3 +64,14 @@ void processPieceRanges(PieceRange pieceRange, bool* enabled, void (*processOutp
     delete[] angleValues;
     delete[] horizontalOffsetValues;
 }
+
+// test function to process all pieces from SimulationData and output results
+void test(bool* enabled, void (*processOutput)(OUTPUT_FUNCTION_ARGS))
+{
+    initializeHandler(processOutput, enabled);
+    for (int i = 0; i < pieceCount; i++)
+    {
+        processHandler(pieces[i]);
+    }
+    cleanupHandler();
+}

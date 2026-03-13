@@ -6,7 +6,7 @@
 
 #include "Process.h"
 
-//#define TEST
+#define TEST
 
 enum OutputMode
 {
@@ -37,7 +37,12 @@ int main()
 {
     generateLookupTables();
     void (*outputFunction)(OUTPUT_FUNCTION_ARGS);
-    OutputMode outputMode = WRITE;
+    OutputMode outputMode;
+    #ifdef TEST
+    outputMode = PRINT;
+    #else
+    outputMode = WRITE;
+    #endif
     setOutputs(true, false, true);
     switch (outputMode)
     {
@@ -55,8 +60,8 @@ int main()
         outputFunction = ignoreOutput;
         break;
     }
-    #ifndef TEST
     bool enabled[] = {true, true, true, true, true, true};
+    #ifndef TEST
     PieceRange pieceRange;
     pieceRange.speed = createRange(0.01f, 0.5f, 0.01f);
     pieceRange.length = createRange(0.01f, 0.5f, 0.01f);
@@ -65,7 +70,7 @@ int main()
     pieceRange.horizontalOffset = createRange(-0.16f, 0.16f, 0.01f);
     processPieceRanges(pieceRange, enabled, outputFunction);
     #else
-    test(outputFunction);
+    test(enabled, outputFunction);
     #endif
     
     if (outputMode == WRITE)
