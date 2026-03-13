@@ -1,5 +1,4 @@
 #include "ProcessPiece.h"
-#include <iostream>
 
 // process data->piece and calculate measurements
 // returns processed data in SimulationData struct

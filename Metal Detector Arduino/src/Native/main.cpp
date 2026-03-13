@@ -6,7 +6,7 @@
 
 #include "Process.h"
 
-#define TEST
+//#define TEST
 
 enum OutputMode
 {
