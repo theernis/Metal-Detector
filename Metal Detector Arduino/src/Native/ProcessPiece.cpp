@@ -16,8 +16,10 @@ void test(void (*processOutput)(OUTPUT_FUNCTION_ARGS))
 {
     bool enabled[] = {true, true, true, true, true, true};
     SimulationData data;
+    data.piece = new Piece;
     data.measureData = new MeasureData;
     data.measureData->sensorData = nullptr;
+    data.measurement = new Measurement;
     for (int i = 0; i < pieceCount; i++)
     {
         *data.piece = pieces[i];
