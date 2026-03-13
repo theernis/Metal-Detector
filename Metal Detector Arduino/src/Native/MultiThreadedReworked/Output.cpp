@@ -2,16 +2,16 @@
 
 #include <cstring>
 
-bool _printPiece = false;
-bool _printMeasureData = false;
-bool _printMeasurement = false;
+bool __printPiece = false;
+bool __printMeasureData = false;
+bool __printMeasurement = false;
 
 // set desired outputs
 void setOutputs(bool printPiece, bool printMeasureData, bool printMeasurement)
 {
-    _printPiece = printPiece;
-    _printMeasureData = printMeasureData;
-    _printMeasurement = printMeasurement;
+    __printPiece = printPiece;
+    __printMeasureData = printMeasureData;
+    __printMeasurement = printMeasurement;
 }
 
 std::ofstream outputFile;
@@ -89,15 +89,15 @@ void printMeasurement(Measurement* measurement)
 // print output to console (for debugging)
 void printOutput(SimulationData* data)
 {
-    if (_printPiece)
+    if (__printPiece)
     {
         printPiece(data->piece);
     }
-    if (_printMeasureData)
+    if (__printMeasureData)
     {
         printMeasureData(data->measureData);
     }
-    if (_printMeasurement)
+    if (__printMeasurement)
     {
         if (validateMeasurements(data->measureData))
         {
@@ -122,7 +122,7 @@ void createParserFile(const std::filesystem::path &filepath)
         std::cerr << "Failed to open parser file '" << parserPath << "'\n";
         return;
     }
-    if (_printPiece)
+    if (__printPiece)
     {
         parserFile << "Piece_speed_m_per_s:float:" << sizeof(float) << std::endl;
         parserFile << "Piece_length_m:float:" << sizeof(float) << std::endl;
@@ -130,7 +130,7 @@ void createParserFile(const std::filesystem::path &filepath)
         parserFile << "Piece_angle_deg:float:" << sizeof(float) << std::endl;
         parserFile << "Piece_horizontalOffset_m:float:" << sizeof(float) << std::endl;
     }
-    if (_printMeasureData)
+    if (__printMeasureData)
     {
         for (int i = 0; i < 6; i++)
         {
@@ -140,7 +140,7 @@ void createParserFile(const std::filesystem::path &filepath)
             parserFile << "MeasureData_sensorData_" << i << "_hasExited:bool:" << sizeof(bool) << std::endl;
         }
     }
-    if (_printMeasurement)
+    if (__printMeasurement)
     {   
         parserFile << "Measurement_speed_m_per_s:float:" << sizeof(float) << std::endl;
         parserFile << "Measurement_length_m:float:" << sizeof(float) << std::endl;
@@ -238,15 +238,15 @@ void writeOutputToFile(SimulationData* data)
     {
         return;
     }
-    if (_printPiece)
+    if (__printPiece)
     {
         writePieceToFile(data->piece);
     }
-    if (_printMeasureData)
+    if (__printMeasureData)
     {
         writeMeasureDataToFile(data->measureData);
     }
-    if (_printMeasurement)
+    if (__printMeasurement)
     {
         writeMeasurementToFile(data->measurement);
     }
