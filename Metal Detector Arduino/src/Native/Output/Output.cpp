@@ -15,38 +15,6 @@ void setOutputs(bool printPiece, bool printMeasureData, bool printMeasurement)
 }
 
 std::ofstream outputFile;
-const unsigned int outputBufferSize = 1 << 16;
-char outputBuffer[outputBufferSize];
-unsigned int outputBufferIndex = 0;
-
-void dumpBuffer()
-{
-    if (outputBufferSize != 0)
-    {
-        outputFile.write(outputBuffer, outputBufferIndex);
-        outputBufferIndex = 0;
-    }
-}
-
-void writeFloat(float data)
-{
-    if (outputBufferSize > outputBufferIndex + sizeof(float))
-    {
-        dumpBuffer();
-    }
-    memcpy(&outputBuffer[outputBufferIndex], &data, sizeof(float));
-    outputBufferIndex += sizeof(float);
-}
-
-void writeBool(bool data)
-{
-    if (outputBufferSize > outputBufferIndex + sizeof(bool))
-    {
-        dumpBuffer();
-    }
-    memcpy(&outputBuffer[outputBufferIndex], &data, sizeof(bool));
-    outputBufferIndex += sizeof(bool);
-}
 
 // ignore output (for performance testing)
 void ignoreOutput(SimulationData* data)
@@ -196,7 +164,6 @@ void openOutputFile(const std::filesystem::path &filepath)
 // close output file (for data collection)
 void closeOutputFile()
 {
-    dumpBuffer();
     outputFile.close();
 }
 
