@@ -43,7 +43,6 @@ int main()
     #else
     outputMode = WRITE;
     #endif
-    setOutputs(true, false, true);
     switch (outputMode)
     {
     case IGNORE:
@@ -61,6 +60,7 @@ int main()
         break;
     }
     bool enabled[] = {true, true, true, true, true, true};
+    initializeOutputs(true, false, true);
     #ifndef TEST
     PieceRange pieceRange;
     pieceRange.speed = createRange(0.01f, 0.5f, 0.01f);

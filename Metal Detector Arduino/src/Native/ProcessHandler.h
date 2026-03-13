@@ -3,6 +3,8 @@
 
 #include "ProcessPiece.h"
 
+// initialize output settings
+void initializeOutputs(bool printPiece, bool printMeasureData, bool printMeasurement);
 // initialize process handling
 void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS), bool* enabled);
 // process handling

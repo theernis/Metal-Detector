@@ -30,6 +30,10 @@ Job** jobBuffers;
 
 std::thread* outputHandler;
 
+bool _printPiece;
+bool _printMeasureData;
+bool _printMeasurement;
+
 // thread function to process output data
 void outputThread()
 {
@@ -95,9 +99,17 @@ void workerThread(Job* jobBuffer)
     return;
 }
 
+void initializeOutputs(bool printPiece, bool printMeasureData, bool printMeasurement)
+{
+    _printPiece = printPiece;
+    _printMeasureData = printMeasureData;
+    _printMeasurement = printMeasurement;
+}
+
 // initialize process handling
 void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS), bool* enabled)
 {
+    setOutputs(_printPiece, _printMeasureData, _printMeasurement);
     _enabled = enabled;
     outputFunction = processOutput;
 
