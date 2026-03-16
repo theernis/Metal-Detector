@@ -34,6 +34,19 @@ bool _printPiece;
 bool _printMeasureData;
 bool _printMeasurement;
 
+const unsigned int pieceSize = sizeof(float) * 5;
+const unsigned int sensorDataSize = sizeof(float) * 2 + sizeof(bool) * 2;
+const unsigned int measureDataSize = sensorDataSize * 6;
+const unsigned int measurementSize = sizeof(float) * 4;
+const unsigned int simulationDataSize = pieceSize + measureDataSize + measurementSize;
+unsigned int pieceOffset;
+unsigned int measureDataOffset;
+unsigned int measurementOffset;
+
+unsigned int outputDataSize;
+
+char* outputDataBuffer = nullptr;
+
 // thread function to process output data
 void outputThread()
 {
@@ -105,6 +118,12 @@ void initializeOutputs(bool printPiece, bool printMeasureData, bool printMeasure
     _printMeasureData = printMeasureData;
     _printMeasurement = printMeasurement;
     setOutputs(_printPiece, _printMeasureData, _printMeasurement);
+
+    outputDataSize = (printPiece ? pieceSize : 0) + (printMeasureData ? measureDataSize : 0) + (printMeasurement ? measurementSize : 0);
+
+    pieceOffset = 0;
+    measureDataOffset = pieceOffset + (printPiece ? pieceSize : 0);
+    measurementOffset = measureDataOffset + (printMeasureData ? measureDataSize : 0);
 }
 
 // initialize process handling
@@ -112,6 +131,8 @@ void initializeHandler(void (*processOutput)(OUTPUT_FUNCTION_ARGS), bool* enable
 {
     _enabled = enabled;
     outputFunction = processOutput;
+
+    outputDataBuffer = new char[outputDataSize];
 
     workerThreadCount = std::thread::hardware_concurrency() - 2;
     jobBuffers = new Job*[workerThreadCount];
@@ -194,5 +215,6 @@ void cleanupHandler()
         delete[] jobBuffers[i];
     }
     delete[] jobBuffers;
+    delete[] outputDataBuffer;
     return;
 }
